@@ -1,10 +1,7 @@
 #include <Arduino.h>
 #include <Motor.h>
 
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
+#include <IMU.h>
 
 /* Set the delay between fresh samples */
 #define BNO055_SAMPLERATE_DELAY_MS (100)
@@ -15,7 +12,7 @@ const int MOTOR_L_PIN_B = A1;
 const int MOTOR_R_PIN_A = A2;
 const int MOTOR_R_PIN_B = A3;
 
-Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
+IMU bno = IMU(55, 0x28);
 
 Motor motor_R = Motor(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0);
 Motor motor_L = Motor(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0);
@@ -23,6 +20,8 @@ Motor motor_L = Motor(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0);
 
 void setup() {
   Serial.begin(115200);
+  while (!Serial) delay(10);  // wait for serial port to open!
+  
   /* Initialise the sensor */
   if (!bno.begin())
   {
