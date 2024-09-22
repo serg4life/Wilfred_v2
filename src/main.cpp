@@ -15,8 +15,15 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiAP.h>
+#include <Motor.h>
 
 #define LED_BUILTIN 13   // Set the GPIO pin where you connected your test LED or comment this line out if your dev board has a built-in LED
+
+const int ENABLE_PIN = D2;
+const int MOTOR_L_PIN_A = A0;
+const int MOTOR_L_PIN_B = A1;
+const int MOTOR_R_PIN_A = A2;
+const int MOTOR_R_PIN_B = A3;
 
 // Set these to your desired credentials.
 const char *ssid = "Wilfred";
@@ -26,11 +33,15 @@ String LED_STATE = "OFF";
 String header;
 
 WiFiServer server(80);
-
+Motor motor_L = Motor(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0);
+Motor motor_R = Motor(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0);
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
-
+  pinMode(ENABLE_PIN, OUTPUT);
+  digitalWrite(ENABLE_PIN, HIGH);
+  motor_L.setRotation(Motor::COUNTERCLOCKWISE);
+  motor_R.setRotation(Motor::CLOCKWISE);
   Serial.begin(115200);
   Serial.println();
   Serial.println("Configuring access point...");
@@ -79,6 +90,19 @@ void loop() {
               Serial.println("LED OFF");
               LED_STATE = "OFF";
               digitalWrite(LED_BUILTIN, LOW);
+            } else if(header.indexOf("GET /FORWARD") >= 0) {
+              motor_L.setRotation(Motor::COUNTERCLOCKWISE);
+              motor_R.setRotation(Motor::CLOCKWISE);
+              motor_R.setPower(70);
+              motor_L.setPower(70);
+            } else if(header.indexOf("GET /BACKWARD") >= 0) {
+              motor_R.setRotation(Motor::COUNTERCLOCKWISE);
+              motor_L.setRotation(Motor::CLOCKWISE);
+              motor_R.setPower(70);
+              motor_L.setPower(70);
+            } else if(header.indexOf("GET /STOP") >= 0) {
+              motor_R.setPower(0);
+              motor_L.setPower(0);
             }
 
             // Display the HTML web page
@@ -90,10 +114,10 @@ void loop() {
             client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
             client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");
             client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
-            client.println(".button2 {background-color: #555555;}</style></head>");
+            client.println(".button2 {background-color: #555555;}</style><title>Wilfred Controller</title></head>");
             
             // Web Page Heading
-            client.println("<body><h1>ESP32 Web Server</h1>");
+            client.println("<body><h1>Wilfred Controller</h1>");
 
             // Display current state, and ON/OFF buttons for GPIO 27  
             client.println("<p>LED - State " + LED_STATE + "</p>");
@@ -103,6 +127,10 @@ void loop() {
             } else {
               client.println("<p><a href=\"/LED/OFF\"><button class=\"button button2\">OFF</button></a></p>");
             }
+
+            client.println("<p><a href=\"/FORWARD\"><button class=\"button\">FORWARD</button></a></p>");
+            client.println("<p><a href=\"/BACKWARD\"><button class=\"button\">BACKWARD</button></a></p>");
+            client.println("<p><a href=\"/STOP\"><button class=\"button\">STOP</button></a></p>");
             client.println("</body></html>");
             
             // The HTTP response ends with another blank line
