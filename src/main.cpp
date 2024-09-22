@@ -16,11 +16,14 @@
 #include <WiFiClient.h>
 #include <WiFiAP.h>
 
-#define LED_BUILTIN 2   // Set the GPIO pin where you connected your test LED or comment this line out if your dev board has a built-in LED
+#define LED_BUILTIN 13   // Set the GPIO pin where you connected your test LED or comment this line out if your dev board has a built-in LED
 
 // Set these to your desired credentials.
 const char *ssid = "Wilfred";
 const char *password = "12345678";
+
+String LED_STATE = "OFF";
+String header;
 
 WiFiServer server(80);
 
@@ -55,7 +58,8 @@ void loop() {
     while (client.connected()) {            // loop while the client's connected
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
-        Serial.write(c);                    // print it out the serial monitor
+        Serial.write(c);
+        header += c;                    // print it out the serial monitor
         if (c == '\n') {                    // if the byte is a newline character
 
           // if the current line is blank, you got two newline characters in a row.
@@ -67,11 +71,41 @@ void loop() {
             client.println("Content-type:text/html");
             client.println();
 
-            // the content of the HTTP response follows the header:
-            client.print("Click <a href=\"/H\">here</a> to turn ON the LED.<br>");
-            client.print("Click <a href=\"/L\">here</a> to turn OFF the LED.<br>");
+            if(header.indexOf("GET /LED/ON") >= 0){
+              Serial.println("LED ON");
+              LED_STATE = "ON";
+              digitalWrite(LED_BUILTIN, HIGH);
+            } else if(header.indexOf("GET /LED/OFF") >= 0){
+              Serial.println("LED OFF");
+              LED_STATE = "OFF";
+              digitalWrite(LED_BUILTIN, LOW);
+            }
 
-            // The HTTP response ends with another blank line:
+            // Display the HTML web page
+            client.println("<!DOCTYPE html><html>");
+            client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+            client.println("<link rel=\"icon\" href=\"data:,\">");
+            // CSS to style the on/off buttons 
+            // Feel free to change the background-color and font-size attributes to fit your preferences
+            client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
+            client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");
+            client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
+            client.println(".button2 {background-color: #555555;}</style></head>");
+            
+            // Web Page Heading
+            client.println("<body><h1>ESP32 Web Server</h1>");
+
+            // Display current state, and ON/OFF buttons for GPIO 27  
+            client.println("<p>LED - State " + LED_STATE + "</p>");
+            // If the output27State is off, it displays the ON button       
+            if (LED_STATE=="OFF") {
+              client.println("<p><a href=\"/LED/ON\"><button class=\"button\">ON</button></a></p>");
+            } else {
+              client.println("<p><a href=\"/LED/OFF\"><button class=\"button button2\">OFF</button></a></p>");
+            }
+            client.println("</body></html>");
+            
+            // The HTTP response ends with another blank line
             client.println();
             // break out of the while loop:
             break;
@@ -81,16 +115,10 @@ void loop() {
         } else if (c != '\r') {  // if you got anything else but a carriage return character,
           currentLine += c;      // add it to the end of the currentLine
         }
-
-        // Check to see if the client request was "GET /H" or "GET /L":
-        if (currentLine.endsWith("GET /H")) {
-          digitalWrite(LED_BUILTIN, HIGH);               // GET /H turns the LED on
-        }
-        if (currentLine.endsWith("GET /L")) {
-          digitalWrite(LED_BUILTIN, LOW);                // GET /L turns the LED off
-        }
       }
     }
+    // Clear the header variable
+    header = "";
     // close the connection:
     client.stop();
     Serial.println("Client Disconnected.");
