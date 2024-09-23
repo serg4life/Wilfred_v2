@@ -6,6 +6,7 @@ Motor::Motor(int pinAA, int pinBB, float deathZone){
     pinB = pinBB;
     rotation = CLOCKWISE;
     deathzone = deathZone;
+    power = 0;
 };
 
 void Motor::setPower(void){
@@ -14,16 +15,17 @@ void Motor::setPower(void){
 
 void Motor::setPower(float value){
     float maped_power;
-    if(value < 0){
-        value = 0;
+    if(value <= 0){
+        power = 0;
+        analogWrite(pinA, 0);
+        analogWrite(pinB, 0);
     }
-    else if(value > 100){
-        value = 100;
+    else {
+        if(value > 100) {value = 100;}
+        power = value;
+        maped_power = map(value, 0, 100, deathzone, 1024);
+        writePins(maped_power);
     }
-    power = value;
-    
-    maped_power = map(value, 0, 100, deathzone, 1024);
-    writePins(maped_power);
 };
 
 void Motor::writePins(float value){
