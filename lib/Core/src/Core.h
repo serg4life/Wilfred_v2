@@ -24,7 +24,7 @@ class Core {
         void stop(void);
         void rotate(float angles);
         void rotate(Rotations rotation);
-        void move(Directions direction = FORWARD, float power_value);
+        void move(Directions direction, float power_value);
         void changeDirection(void);
 
         int8_t getTemperature(void);

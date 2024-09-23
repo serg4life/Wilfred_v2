@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Motor.h>
 
-Motor::Motor(int pinAA, int pinBB, float deathZone = 0){
+Motor::Motor(int pinAA, int pinBB, float deathZone){
     pinA = pinAA;
     pinB = pinBB;
     rotation = CLOCKWISE;

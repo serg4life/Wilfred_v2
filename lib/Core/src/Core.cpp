@@ -1,11 +1,12 @@
 #include <Core.h>
 
-Core::Core(){
-    motor_R = Motor(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0);
-    motor_L = Motor(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0);
+Core::Core() : 
+    motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
+    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0)
+{
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
-    imu = IMU(55, 0x28);
+    imu = IMU();
     imu.begin();
     imu.setMode(OPERATION_MODE_NDOF);
     imu.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
