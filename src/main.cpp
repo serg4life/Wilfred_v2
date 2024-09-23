@@ -40,8 +40,8 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(ENABLE_PIN, OUTPUT);
   digitalWrite(ENABLE_PIN, HIGH);
-  motor_L.setRotation(Motor::COUNTERCLOCKWISE);
-  motor_R.setRotation(Motor::CLOCKWISE);
+  motor_L.setRotation(COUNTERCLOCKWISE);
+  motor_R.setRotation(CLOCKWISE);
   Serial.begin(115200);
   Serial.println();
   Serial.println("Configuring access point...");
@@ -91,13 +91,13 @@ void loop() {
               LED_STATE = "OFF";
               digitalWrite(LED_BUILTIN, LOW);
             } else if(header.indexOf("GET /FORWARD") >= 0) {
-              motor_L.setRotation(Motor::COUNTERCLOCKWISE);
-              motor_R.setRotation(Motor::CLOCKWISE);
+              motor_L.setRotation(COUNTERCLOCKWISE);
+              motor_R.setRotation(CLOCKWISE);
               motor_R.setPower(70);
               motor_L.setPower(70);
             } else if(header.indexOf("GET /BACKWARD") >= 0) {
-              motor_R.setRotation(Motor::COUNTERCLOCKWISE);
-              motor_L.setRotation(Motor::CLOCKWISE);
+              motor_R.setRotation(COUNTERCLOCKWISE);
+              motor_L.setRotation(CLOCKWISE);
               motor_R.setPower(70);
               motor_L.setPower(70);
             } else if(header.indexOf("GET /STOP") >= 0) {

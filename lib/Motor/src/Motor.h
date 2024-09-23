@@ -1,21 +1,21 @@
 #ifndef motor_h
 #define motor_h
 
+typedef enum {CLOCKWISE, COUNTERCLOCKWISE} Rotations;
+
 class Motor {
   public:
-    enum Rotation {CLOCKWISE, COUNTERCLOCKWISE};
-
     Motor(int pinAA, int pinBB, float deathZone);
     void setPower(float value);
     void setPower(void);
-    void setRotation(Rotation nRotation);
+    void setRotation(Rotations nRotation);
     void invertRotation(void);
     void writePins(float values);
     void brake(void);
 
   private:
     float power;
-    Rotation rotation;
+    Rotations rotation;
     int pinA;
     int pinB;
     float deathzone;

@@ -39,14 +39,14 @@ void Motor::writePins(float value){
     }
 };
 
-void Motor::setRotation(Rotation nRotation){
+void Motor::setRotation(Rotations nRotation){
     rotation = nRotation;
     float maped_power = map(power, 0, 100, deathzone, 1024);
     writePins(maped_power);
 };
 
 void Motor::invertRotation(void){
-    Rotation temp;
+    Rotations temp;
     switch (rotation) {
         case CLOCKWISE:
             temp = COUNTERCLOCKWISE;
