@@ -69,9 +69,20 @@ int8_t Core::getTemperature(void){
 };
 
 void Core::move(Directions direction, float power_value){
-    if(direction^lastDirection){
-        changeDirection();
+    switch (direction)
+    {
+        case FORWARD:
+            motor_L.setRotation(COUNTERCLOCKWISE);
+            motor_R.setRotation(CLOCKWISE);
+            break;
+        case BACKWARD:
+            motor_R.setRotation(COUNTERCLOCKWISE);
+            motor_L.setRotation(CLOCKWISE);
+            break;
+        default:
+            break;
     }
+    lastDirection = direction;
     motor_L.setPower(power_value);
     motor_R.setPower(power_value);
 };
