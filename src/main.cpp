@@ -12,7 +12,7 @@ const int MOTOR_L_PIN_B = A1;
 const int MOTOR_R_PIN_A = A2;
 const int MOTOR_R_PIN_B = A3;
 
-IMU bno = IMU(55, 0x28);
+IMU bno = IMU();
 
 Motor motor_R = Motor(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0);
 Motor motor_L = Motor(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0);
