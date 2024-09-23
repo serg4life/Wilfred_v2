@@ -1,15 +1,4 @@
-/*
-  WiFiAccessPoint.ino creates a WiFi access point and provides a web server on it.
-
-  Steps:
-  1. Connect to the access point "yourAp"
-  2. Point your web browser to http://192.168.4.1/H to turn the LED on or http://192.168.4.1/L to turn it off
-     OR
-     Run raw TCP "GET /H" and "GET /L" on PuTTY terminal with 192.168.4.1 as IP address and 80 as port
-
-  Created for arduino-esp32 on 04 July, 2018
-  by Elochukwu Ifediora (fedy0)
-*/
+/*Wilfred Web Controller at 192.168.4.1*/
 
 #include <Core.h>
 #include <WiFi.h>
@@ -34,8 +23,6 @@ void setup() {
   Serial.println();
   Serial.println("Configuring access point...");
 
-  // You can remove the password parameter if you want the AP to be open.
-  // a valid password must have more than 7 characters
   if (!WiFi.softAP(ssid, password)) {
     log_e("Soft AP creation failed.");
     while(1);

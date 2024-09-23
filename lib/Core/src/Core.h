@@ -10,6 +10,7 @@ typedef enum {FORWARD, BACKWARD} Directions;
 
 typedef enum {
     ENABLE_PIN = D2,
+    DRIVER_STATUS_PIN = D3,
     MOTOR_L_PIN_A = A0,
     MOTOR_L_PIN_B = A1,
     MOTOR_R_PIN_A = A2,

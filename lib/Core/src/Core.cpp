@@ -4,6 +4,8 @@ Core::Core() :
     motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
     motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0)
 {
+    pinMode(ENABLE_PIN, OUTPUT);
+    digitalWrite(ENABLE_PIN, LOW);  //NO funciona
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
     imu = IMU();
@@ -11,8 +13,6 @@ Core::Core() :
     imu.setMode(OPERATION_MODE_NDOF);
     imu.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
     //imu.enterSuspendMode();
-    pinMode(ENABLE_PIN, OUTPUT);
-
     lastDirection = FORWARD;
     areMotorsEnabled = false;
     lastHeading = 0;
