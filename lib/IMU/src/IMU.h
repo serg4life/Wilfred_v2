@@ -10,7 +10,7 @@
 
 class IMU : public Adafruit_BNO055{   
     public:
-        using Adafruit_BNO055::Adafruit_BNO055;
+        IMU();
 
     private:
 

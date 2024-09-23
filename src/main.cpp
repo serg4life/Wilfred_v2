@@ -28,6 +28,7 @@ const int MOTOR_R_PIN_B = A3;
 // Set these to your desired credentials.
 const char *ssid = "Wilfred";
 const char *password = "12345678";
+IMU bno = IMU();
 
 String LED_STATE = "OFF";
 String header;
