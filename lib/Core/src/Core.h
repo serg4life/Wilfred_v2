@@ -3,7 +3,10 @@
 
 #include <Arduino.h>
 #include <Motor.h>
-#include <IMU.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 typedef enum {FORWARD, BACKWARD} Directions;
@@ -36,7 +39,7 @@ class Core {
         double lastHeading;
         int8_t lastTemperature;
         bool areMotorsEnabled;
-        IMU imu;
+        Adafruit_BNO055 bno;
         Motor motor_R;
         Motor motor_L;
 };

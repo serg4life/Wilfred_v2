@@ -61,6 +61,7 @@ void loop() {
               Serial.println("LED ON");
               LED_STATE = "ON";
               digitalWrite(LED_BUILTIN, HIGH);
+              Serial.println("EY");
             } else if(header.indexOf("GET /LED/OFF") >= 0){
               Serial.println("LED OFF");
               LED_STATE = "OFF";

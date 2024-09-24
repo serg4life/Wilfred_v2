@@ -2,16 +2,16 @@
 
 Core::Core() : 
     motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
-    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0)
+    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0),
+    bno(55, 0x28, &Wire)
 {
     pinMode(ENABLE_PIN, OUTPUT);
     digitalWrite(ENABLE_PIN, LOW);  //NO funciona
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
-    imu = IMU();
-    imu.begin();
-    imu.setMode(OPERATION_MODE_NDOF);
-    imu.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
+    bno.begin();
+    bno.setMode(OPERATION_MODE_NDOF);
+    bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
     //imu.enterSuspendMode();
     lastDirection = FORWARD;
     areMotorsEnabled = false;
@@ -58,13 +58,13 @@ void Core::changeDirection(void){
 };
 
 double Core::getHeading(void){
-    imu::Vector<3> euler = imu.getVector(Adafruit_BNO055::VECTOR_EULER);
+    imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     lastHeading = euler.x();
     return lastHeading;
 };
 
 int8_t Core::getTemperature(void){
-    lastTemperature = imu.getTemp();
+    lastTemperature = bno.getTemp();
     return lastTemperature;
 };
 
