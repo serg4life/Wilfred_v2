@@ -2,7 +2,9 @@
 
 const char *ssid = "Wilfred";
 const char *password = "12345678";
+String LED_STATE = "OFF";
 
+//HACE FALTA ALGUNA FORMA DE PASAR VARIABLES Y DE INTERPRETAR LAS ACCIONES
 WebController::WebController(WiFiServer server_par){
     server = server_par;
 };
@@ -19,7 +21,28 @@ void WebController::initWebController(void){
   Serial.println("Server started");
 };
 
+void WebController::startService(void){
+    while(true){
+        listenForClients();
+        headerParse();          //Important, must be called after exactly listenForClients
+    };
+};
+
+void WebController::headerParse(void){
+    if(header.indexOf("GET /LED/ON") >= 0){
+        Serial.println("LED ON");
+        LED_STATE = "ON";
+        digitalWrite(LED_BUILTIN, HIGH);
+    } else if(header.indexOf("GET /LED/OFF") >= 0){
+        Serial.println("LED OFF");
+        LED_STATE = "OFF";
+        digitalWrite(LED_BUILTIN, LOW);
+    };
+    header = "";
+};
+
 void WebController::listenForClients(){
+    //header = "";
     WiFiClient client = server.available();
     if (client) {                             // if you get a client,
         Serial.println("New Client.");           // print a message out the serial port
@@ -39,21 +62,6 @@ void WebController::listenForClients(){
                         client.println("Content-type:text/html");
                         client.println();
 
-                        if(header.indexOf("GET /LED/ON") >= 0){
-                            Serial.println("LED ON");
-                            LED_STATE = "ON";
-                            digitalWrite(LED_BUILTIN, HIGH);
-                        } else if(header.indexOf("GET /LED/OFF") >= 0){
-                            Serial.println("LED OFF");
-                            LED_STATE = "OFF";
-                            digitalWrite(LED_BUILTIN, LOW);
-                        } else if(header.indexOf("GET /FORWARD") >= 0) {
-                            Wilfred.move(FORWARD, 70);
-                        } else if(header.indexOf("GET /BACKWARD") >= 0) {
-                            Wilfred.move(BACKWARD, 70);
-                        } else if(header.indexOf("GET /STOP") >= 0) {
-                            Wilfred.stop();
-                        }
                         // Display the HTML web page
                         client.println("<!DOCTYPE html><html>");
                         client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
@@ -68,7 +76,6 @@ void WebController::listenForClients(){
                         // Web Page Heading
                         client.println("<body><h1>Wilfred Controller</h1>");
 
-                        // Display current state, and ON/OFF buttons for GPIO 27  
                         client.println("<p>LED - State " + LED_STATE + "</p>");
                         // If the output27State is off, it displays the ON button       
                         if (LED_STATE=="OFF") {
@@ -76,6 +83,7 @@ void WebController::listenForClients(){
                         } else {
                             client.println("<p><a href=\"/LED/OFF\"><button class=\"button button2\">OFF</button></a></p>");
                         }
+
                         client.println("<p><a href=\"/FORWARD\"><button class=\"button\">FORWARD</button></a></p>");
                         client.println("<p><a href=\"/BACKWARD\"><button class=\"button\">BACKWARD</button></a></p>");
                         client.println("<p><a href=\"/STOP\"><button class=\"button\">STOP</button></a></p>");
@@ -88,13 +96,13 @@ void WebController::listenForClients(){
                     } else {    // if you got a newline, then clear currentLine:
                         currentLine = "";
                     }
-                    } else if (c != '\r') {  // if you got anything else but a carriage return character,
-                        currentLine += c;      // add it to the end of the currentLine
-                    }
+                } else if (c != '\r') {  // if you got anything else but a carriage return character,
+                    currentLine += c;      // add it to the end of the currentLine
+                }
             }
         }
         // Clear the header variable
-        header = "";
+        //header = "";
         // close the connection:
         client.stop();
         Serial.println("Client Disconnected.");
