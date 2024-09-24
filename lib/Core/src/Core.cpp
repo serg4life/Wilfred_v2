@@ -9,14 +9,17 @@ Core::Core() :
     digitalWrite(ENABLE_PIN, LOW);  //NO funciona
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
-    bno.begin();
-    bno.setMode(OPERATION_MODE_NDOF);
-    bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
-    //imu.enterSuspendMode();
+
     lastDirection = FORWARD;
     areMotorsEnabled = false;
     lastHeading = 0;
     lastTemperature = 0;
+};
+
+void Core::initIMU(void){
+    bno.begin();
+    bno.setMode(OPERATION_MODE_NDOF);
+    bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
 };
 
 void Core::enableMotors(void){

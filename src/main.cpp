@@ -19,6 +19,7 @@ WiFiServer server(80);
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
+  Wilfred.initIMU();
   Serial.begin(115200);
   Serial.println();
   Serial.println("Configuring access point...");
@@ -37,7 +38,6 @@ void setup() {
 
 void loop() {
   WiFiClient client = server.available();   // listen for incoming clients
-
   if (client) {                             // if you get a client,
     Serial.println("New Client.");           // print a message out the serial port
     String currentLine = "";                // make a String to hold incoming data from the client
@@ -61,7 +61,6 @@ void loop() {
               Serial.println("LED ON");
               LED_STATE = "ON";
               digitalWrite(LED_BUILTIN, HIGH);
-              Serial.println("EY");
             } else if(header.indexOf("GET /LED/OFF") >= 0){
               Serial.println("LED OFF");
               LED_STATE = "OFF";
