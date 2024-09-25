@@ -1,12 +1,14 @@
 #include <Controller.h>
+#include <Core.h>
 
 const char *ssid = "Wilfred";
 const char *password = "12345678";
-String LED_STATE = "OFF";
+String MOTORS_STATE = "DISABLED";
+WiFiServer server(80);
 
 //HACE FALTA ALGUNA FORMA DE PASAR VARIABLES Y DE INTERPRETAR LAS ACCIONES
-WebController::WebController(WiFiServer server_par){
-    server = server_par;
+WebController::WebController(Core param_core){
+    coreObject = param_core;
 };
 
 void WebController::initWebController(void){
@@ -31,12 +33,23 @@ void WebController::startService(void){
 void WebController::headerParse(void){
     if(header.indexOf("GET /LED/ON") >= 0){
         Serial.println("LED ON");
-        LED_STATE = "ON";
+        MOTORS_STATE = "ENABLED";
         digitalWrite(LED_BUILTIN, HIGH);
+        coreObject.enableMotors();
     } else if(header.indexOf("GET /LED/OFF") >= 0){
         Serial.println("LED OFF");
-        LED_STATE = "OFF";
+        MOTORS_STATE = "DISABLED";
         digitalWrite(LED_BUILTIN, LOW);
+        coreObject.disableMotors();
+    } else if(header.indexOf("GET /FORWARD") >= 0){
+        Serial.println("FORWARD");
+        coreObject.move(FORWARD, 70);
+    } else if(header.indexOf("GET /BACKWARD") >= 0){
+        Serial.println("BACKWARDS");
+        coreObject.move(BACKWARD, 70);
+    } else if(header.indexOf("GET /STOP") >= 0){
+        Serial.println("STOP");
+        coreObject.stop();
     };
     //header = "";
 };
@@ -77,12 +90,12 @@ void WebController::listenForClients(){
                         // Web Page Heading
                         client.println("<body><h1>Wilfred Controller</h1>");
 
-                        client.println("<p>LED - State " + LED_STATE + "</p>");
+                        client.println("<p>MOTORS - State " + MOTORS_STATE + "</p>");
                         // If the output27State is off, it displays the ON button       
-                        if (LED_STATE=="OFF") {
-                            client.println("<p><a href=\"/LED/ON\"><button class=\"button\">ON</button></a></p>");
+                        if (MOTORS_STATE=="DISABLED") {
+                            client.println("<p><a href=\"/LED/ON\"><button class=\"button\">ENABLE MOTORS</button></a></p>");
                         } else {
-                            client.println("<p><a href=\"/LED/OFF\"><button class=\"button button2\">OFF</button></a></p>");
+                            client.println("<p><a href=\"/LED/OFF\"><button class=\"button button2\">DISABLE MOTORS</button></a></p>");
                         }
 
                         client.println("<p><a href=\"/FORWARD\"><button class=\"button\">FORWARD</button></a></p>");
