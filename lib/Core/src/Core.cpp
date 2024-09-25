@@ -10,7 +10,7 @@ Core::Core() :
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
     lastDirection = FORWARD;
-    areMotorsEnabled = false;
+    areMotorsEnabled_var = false;
     lastHeading = 0;
     lastTemperature = 0;
 };
@@ -21,13 +21,17 @@ void Core::initIMU(void){
     bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
 };
 
+bool Core::areMotorsEnabled(void){
+    return areMotorsEnabled_var;
+};
+
 void Core::enableMotors(void){
-    areMotorsEnabled = true;
+    areMotorsEnabled_var = true;
     digitalWrite(ENABLE_PIN, HIGH);
 };
 
 void Core::disableMotors(void){
-    areMotorsEnabled = false;
+    areMotorsEnabled_var = false;
     stop();
     digitalWrite(ENABLE_PIN, LOW);
 };

@@ -31,6 +31,7 @@ class Core {
         void rotate(Rotations rotation);
         void move(Directions direction, float power_value);
         void changeDirection(void);
+        bool areMotorsEnabled(void);
 
         int8_t getTemperature(void);
         double getHeading(void);
@@ -43,7 +44,7 @@ class Core {
         Directions lastDirection;
         double lastHeading;
         int8_t lastTemperature;
-        bool areMotorsEnabled;
+        bool areMotorsEnabled_var;
 };
 
 #endif
