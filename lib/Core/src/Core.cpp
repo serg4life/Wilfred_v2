@@ -21,16 +21,6 @@ void Core::initIMU(void){
     bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
 };
 
-
-void Core::initController(void){
-    WiFiServer server(80);
-    controller = WebController(server);
-};
-
-void Core::initControllerService(void){
-    controller.startService();
-};
-
 void Core::enableMotors(void){
     areMotorsEnabled = true;
     digitalWrite(ENABLE_PIN, HIGH);
@@ -38,6 +28,7 @@ void Core::enableMotors(void){
 
 void Core::disableMotors(void){
     areMotorsEnabled = false;
+    stop();
     digitalWrite(ENABLE_PIN, LOW);
 };
 

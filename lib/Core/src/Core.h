@@ -7,7 +7,6 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
-#include <Controller.h>
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 typedef enum {FORWARD, BACKWARD} Directions;
@@ -27,8 +26,6 @@ class Core {
         void enableMotors(void);
         void disableMotors(void);
         void initIMU(void);
-        void initController(void);
-        void initControllerService(void);
         void stop(void);
         void rotate(float angles);
         void rotate(Rotations rotation);
@@ -41,7 +38,6 @@ class Core {
         Adafruit_BNO055 bno;
         Motor motor_R;
         Motor motor_L;
-        WebController controller;
 
     private:
         Directions lastDirection;
