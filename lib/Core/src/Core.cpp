@@ -26,6 +26,7 @@ bool Core::areMotorsEnabled(void){
 };
 
 void Core::enableMotors(void){
+    stop();
     areMotorsEnabled_var = true;
     digitalWrite(ENABLE_PIN, HIGH);
 };
