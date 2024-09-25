@@ -6,7 +6,7 @@ Core::Core() :
     bno(55, 0x28, &Wire)
 {
     pinMode(ENABLE_PIN, OUTPUT);
-    digitalWrite(ENABLE_PIN, LOW);  //NO funciona
+    digitalWrite(ENABLE_PIN, LOW);  
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
     lastDirection = FORWARD;
@@ -45,7 +45,22 @@ void Core::stop(void){
 void Core::rotate(float angles){
 };
 
-void Core::rotate(Rotations rotation){};
+void Core::rotate(Rotations rotation, float value){
+    switch (rotation)
+    {
+    case CLOCKWISE:
+        motor_L.setRotation(COUNTERCLOCKWISE);
+        motor_R.setRotation(COUNTERCLOCKWISE);
+        break;
+    case COUNTERCLOCKWISE:
+        motor_L.setRotation(CLOCKWISE);
+        motor_R.setRotation(CLOCKWISE);
+    default:
+        break;
+    }
+    motor_L.setPower(value);
+    motor_R.setPower(value);
+};
 
 void Core::changeDirection(void){
     Directions tempDirection;

@@ -28,7 +28,7 @@ class Core {
         void initIMU(void);
         void stop(void);
         void rotate(float angles);
-        void rotate(Rotations rotation);
+        void rotate(Rotations rotation, float value);
         void move(Directions direction, float power_value);
         void changeDirection(void);
         bool areMotorsEnabled(void);
