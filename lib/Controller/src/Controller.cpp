@@ -50,6 +50,12 @@ void WebController::headerParse(void){
     } else if(header.indexOf("GET /STOP") >= 0){
         Serial.println("STOP");
         coreObject.stop();
+    } else if(header.indexOf("GET /ROTR") >= 0){
+        Serial.println("ROTR");
+        coreObject.rotate(CLOCKWISE, 70);
+    } else if(header.indexOf("GET /ROTL") >= 0){
+        Serial.println("ROTI");
+        coreObject.rotate(COUNTERCLOCKWISE, 70);
     };
     //header = "";
 };
@@ -85,6 +91,7 @@ void WebController::listenForClients(){
                         client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
                         client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");
                         client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
+                        client.println(".container {width: 300px; display: flex; justify-content: center; margin: auto;}");
                         client.println(".button2 {background-color: #555555;}</style><title>Wilfred Controller</title></head>");
                         
                         // Web Page Heading
@@ -98,9 +105,11 @@ void WebController::listenForClients(){
                             client.println("<p><a href=\"/LED/OFF\"><button class=\"button button2\">DISABLE MOTORS</button></a></p>");
                         }
 
-                        client.println("<p><a href=\"/FORWARD\"><button class=\"button\">FORWARD</button></a></p>");
-                        client.println("<p><a href=\"/BACKWARD\"><button class=\"button\">BACKWARD</button></a></p>");
+                        client.println("<div class=\"container\"><p><a href=\"/FORWARD\"><button class=\"button\">FORWARD</button></a></p></div>");
+                        client.println("<div class=\"container\"><p><a href=\"/ROTL\"><button class=\"button\">LEFT</button></a></p>");
                         client.println("<p><a href=\"/STOP\"><button class=\"button\">STOP</button></a></p>");
+                        client.println("<p><a href=\"/ROTR\"><button class=\"button\">RIGHT</button></a></p></div>");
+                        client.println("<div class=\"container\"><p><a href=\"/BACKWARD\"><button class=\"button\">BACKWARD</button></a></p></div>");
                         client.println("</body></html>");
                         
                         // The HTTP response ends with another blank line
