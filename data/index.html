@@ -1,0 +1,98 @@
+<!DOCTYPE html><html>
+    <head>
+        <meta name=\viewport\ content=\width=device-width, initial-scale=1\>
+        <link rel=\icon\ href=\data:,\>
+        <style>
+            html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}
+
+            .button {
+                background-color: #4CAF50;
+                border: none;
+                color: white;
+                padding: 16px 40px; 
+                text-decoration: none;
+                font-size: 30px;
+                margin: 2px;
+                cursor: pointer;
+            }
+
+            .container {width: 300px; display: flex; justify-content: center; margin: auto;}
+
+            .button2 {background-color: #555555;}
+
+            #controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #row {
+                display: flex;
+                justify-content: center;
+            }
+        </style>
+        <title>Wilfred Controller</title>
+    </head>
+    <body>
+        <h1>Wilfred Controller</h1>
+        <div id="controls">
+            <button class="button" id="forward">Adelante</button>
+            <div id="row">
+                <button class="button" id="left">Izquierda</button>
+                <button class="button" id="stop">Detener</button>
+                <button class="button" id="right">Derecha</button>
+            </div>
+            <button class="button" id="backward">Atrás</button>
+        </div>
+    </body>
+    <script>
+        // Conexión WebSocket al servidor (reemplazar con la IP del servidor)
+        const socket = new WebSocket('ws://192.168.4.1:8080'); // Asegúrate de que el servidor esté en ws:// o wss://
+
+        // Función para enviar comandos al servidor
+        function sendCommand(command) {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ command }));
+            }
+        }
+
+        // Asignación de los botones a variables
+        const forwardButton = document.getElementById('forward');
+        const backwardButton = document.getElementById('backward');
+        const leftButton = document.getElementById('left');
+        const rightButton = document.getElementById('right');
+        const stopButton = document.getElementById('stop');
+
+        // Eventos de mantener presionado y soltar los botones
+        function setupButton(button, command) {
+            button.addEventListener('mousedown', () => sendCommand(command));
+            button.addEventListener('mouseup', () => sendCommand('stop'));
+            button.addEventListener('touchstart', () => sendCommand(command)); // Para dispositivos táctiles
+            button.addEventListener('touchend', () => sendCommand('stop'));   // Para dispositivos táctiles
+        }
+
+        // Configurar los botones
+        setupButton(forwardButton, 'forward');
+        setupButton(backwardButton, 'backward');
+        setupButton(leftButton, 'left');
+        setupButton(rightButton, 'right');
+        setupButton(stopButton, 'stop');
+
+        // Manejar los mensajes entrantes del servidor (por ejemplo, estados o respuestas del tanque)
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("Mensaje recibido del servidor:", data);
+        };
+
+        // Manejar errores de conexión
+        socket.onerror = function(error) {
+            console.error("Error de WebSocket:", error);
+        };
+
+        // Manejar cierre de conexión
+        socket.onclose = function() {
+            console.log("Conexión cerrada");
+        };
+    </script>
+</html>
