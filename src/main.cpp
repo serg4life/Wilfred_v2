@@ -26,11 +26,18 @@ void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(115200);
+  //while(!Serial){}; //PARA DEBUG
+  
+  // Iniciar SPIFFS, montar FS
+  if (!SPIFFS.begin(true)) {
+    Serial.println("Error al montar SPIFFS");
+    return;
+  }
   Wilfred.initIMU();
   Wilfred.enableMotors();
   controller.initWebController();
   controller.setOnEvent(webSocketEvent);
-  Serial.begin(115200); 
 }
 
 void loop() {

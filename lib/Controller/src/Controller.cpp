@@ -15,7 +15,7 @@ WebController::WebController(Core param_core) : webSocket(8080) {
 };
 
 bool WebController::loadStatic(){
-    File file = SPIFFS.open("/index.html");
+    File file = SPIFFS.open("/index.html","r");
     if (!file) {
         Serial.println("Error al abrir el archivo HTML");
         return false;
