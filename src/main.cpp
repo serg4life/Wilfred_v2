@@ -35,7 +35,6 @@ void setup() {
     return;
   }
   Wilfred.initIMU();
-  Wilfred.enableMotors();
   controller.initWebController();
   controller.setOnEvent(webSocketEvent);
 }

@@ -41,6 +41,19 @@ void WebController::initWebController(void){
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(200, "text/html", htmlContent);    
     });
+    // Sirve el archivo styles.css cuando el navegador lo solicita
+    server.on("/css/styles.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(SPIFFS, "/css/styles.css", "text/css");
+    });
+
+    // Sirve el archivo script.js cuando el navegador lo solicita
+    server.on("/js/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(SPIFFS, "/js/script.js", "application/javascript");
+    });
+    // Sirve el archivo favicon.ico
+    server.on("/ico/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(SPIFFS, "/ico/favicon.ico", "image/x-icon");
+    });
     Serial.println("Server started");
 };
 
@@ -55,8 +68,18 @@ void WebController::serviceLoop(){
 void WebController::commandHandler(String command){
     if (command == "forward") {
         coreObject.move(FORWARD, 70);
-    } else if (command == "stop") {
+    } else if (command == "motors:stop") {
         coreObject.stop();
+    } else if (command == "backward") {
+        coreObject.move(BACKWARD, 70);
+    } else if (command == "right") {
+        coreObject.rotate(CLOCKWISE, 60);
+    } else if (command == "left") {
+        coreObject.rotate(COUNTERCLOCKWISE, 60);
+    } else if (command == "motors:enable") {
+        coreObject.enableMotors();
+    } else if (command == "motors:disable") {
+        coreObject.disableMotors();
     }
 };
 

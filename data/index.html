@@ -1,98 +1,78 @@
-<!DOCTYPE html><html>
-    <head>
-        <meta name=\viewport\ content=\width=device-width, initial-scale=1\>
-        <link rel=\icon\ href=\data:,\>
-        <style>
-            html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}
+<!DOCTYPE html>
 
-            .button {
-                background-color: #4CAF50;
-                border: none;
-                color: white;
-                padding: 16px 40px; 
-                text-decoration: none;
-                font-size: 30px;
-                margin: 2px;
-                cursor: pointer;
-            }
+<html lang="es">
 
-            .container {width: 300px; display: flex; justify-content: center; margin: auto;}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            .button2 {background-color: #555555;}
+    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+    <link rel="manifest" href="/ico/site.webmanifest">
+    <link rel="mask-icon" href="/ico/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" type="image/x-icon" href="/ico/favicon.ico">
 
-            #controls {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <title>Wilfred Controller</title>
+</head>
 
-            #row {
-                display: flex;
-                justify-content: center;
-            }
-        </style>
-        <title>Wilfred Controller</title>
-    </head>
-    <body>
-        <h1>Wilfred Controller</h1>
-        <div id="controls">
-            <button class="button" id="forward">Adelante</button>
-            <div id="row">
-                <button class="button" id="left">Izquierda</button>
-                <button class="button" id="stop">Detener</button>
-                <button class="button" id="right">Derecha</button>
+<body>
+<div class="container">
+    <h1>Wilfred Controller</h1>
+
+    <label class="switch-button" for="switch">
+        <div class="switch-outer">
+            <input id="switch" type="checkbox">
+            <div class="button">
+            <span class="button-toggle"></span>
+            <span class="button-indicator"></span>
             </div>
-            <button class="button" id="backward">Atrás</button>
         </div>
-    </body>
-    <script>
-        // Conexión WebSocket al servidor (reemplazar con la IP del servidor)
-        const socket = new WebSocket('ws://192.168.4.1:8080'); // Asegúrate de que el servidor esté en ws:// o wss://
+    </label>
 
-        // Función para enviar comandos al servidor
-        function sendCommand(command) {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ command }));
-            }
-        }
+    <div class="controls">
+        <div class="button-container">
+        <div class="button-container2">
+            <button class="button-3d" id="forward">
+            <div class="button-top">
+                <span class="material-icons">❮</span>
+            </div>
+            <div class="button-bottom"></div>
+            <div class="button-base"></div>
+            </button>
+            <button class="button-3d" id="backward">
+            <div class="button-top">
+                <span class="material-icons">❯</span>
+            </div>
+            <div class="button-bottom"></div>
+            <div class="button-base"></div>
+            </button>
+            </div>
+            <div class="button-container">
+            <button class="button-3d" id="left">
+                <div class="button-top">
+                <span class="material-icons">❮</span>
+                </div>
+                <div class="button-bottom"></div>
+                <div class="button-base"></div>
+            </button>
+            <button class="button-3d" id="right">
+                <div class="button-top">
+                <span class="material-icons">❯</span>
+                </div>
+                <div class="button-bottom"></div>
+                <div class="button-base"></div>
+            </button>
+            </div>
+        </div>
+    </div>
 
-        // Asignación de los botones a variables
-        const forwardButton = document.getElementById('forward');
-        const backwardButton = document.getElementById('backward');
-        const leftButton = document.getElementById('left');
-        const rightButton = document.getElementById('right');
-        const stopButton = document.getElementById('stop');
+</div>
+<script src="/js/script.js"></script>
+</body>
 
-        // Eventos de mantener presionado y soltar los botones
-        function setupButton(button, command) {
-            button.addEventListener('mousedown', () => sendCommand(command));
-            button.addEventListener('mouseup', () => sendCommand('stop'));
-            button.addEventListener('touchstart', () => sendCommand(command)); // Para dispositivos táctiles
-            button.addEventListener('touchend', () => sendCommand('stop'));   // Para dispositivos táctiles
-        }
-
-        // Configurar los botones
-        setupButton(forwardButton, 'forward');
-        setupButton(backwardButton, 'backward');
-        setupButton(leftButton, 'left');
-        setupButton(rightButton, 'right');
-        setupButton(stopButton, 'stop');
-
-        // Manejar los mensajes entrantes del servidor (por ejemplo, estados o respuestas del tanque)
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            console.log("Mensaje recibido del servidor:", data);
-        };
-
-        // Manejar errores de conexión
-        socket.onerror = function(error) {
-            console.error("Error de WebSocket:", error);
-        };
-
-        // Manejar cierre de conexión
-        socket.onclose = function() {
-            console.log("Conexión cerrada");
-        };
-    </script>
 </html>

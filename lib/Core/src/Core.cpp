@@ -6,6 +6,7 @@ Core::Core() :
     bno(55, 0x28, &Wire)
 {
     pinMode(ENABLE_PIN, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(ENABLE_PIN, LOW);  
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
@@ -29,12 +30,14 @@ void Core::enableMotors(void){
     stop();
     areMotorsEnabled_var = true;
     digitalWrite(ENABLE_PIN, HIGH);
+    digitalWrite(LED_BUILTIN, HIGH);
 };
 
 void Core::disableMotors(void){
     areMotorsEnabled_var = false;
     stop();
     digitalWrite(ENABLE_PIN, LOW);
+    digitalWrite(LED_BUILTIN, LOW);
 };
 
 void Core::stop(void){

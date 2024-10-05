@@ -1,0 +1,321 @@
+html { 
+    font-family: Helvetica; 
+    height: 100%;
+    display: inline-block; 
+    margin: 0px auto; 
+    text-align: center;
+}
+
+body {
+    margin: 0px;
+    height: 100%;
+}
+
+h1 {
+    color: white;
+}
+.button_old {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 16px 40px; 
+    text-decoration: none;
+    font-size: 30px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+/* From Uiverse.io by kandalgaonkarshubham */ 
+.container {
+    position: absolute;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+          circle farthest-side at 0% 50%,
+          #282828 23.5%,
+          rgba(255, 170, 0, 0) 0
+        )
+        21px 30px,
+      radial-gradient(
+          circle farthest-side at 0% 50%,
+          #2c3539 24%,
+          rgba(240, 166, 17, 0) 0
+        )
+        19px 30px,
+      linear-gradient(
+          #282828 14%,
+          rgba(240, 166, 17, 0) 0,
+          rgba(240, 166, 17, 0) 85%,
+          #282828 0
+        )
+        0 0,
+      linear-gradient(
+          150deg,
+          #282828 24%,
+          #2c3539 0,
+          #2c3539 26%,
+          rgba(240, 166, 17, 0) 0,
+          rgba(240, 166, 17, 0) 74%,
+          #2c3539 0,
+          #2c3539 76%,
+          #282828 0
+        )
+        0 0,
+      linear-gradient(
+          30deg,
+          #282828 24%,
+          #2c3539 0,
+          #2c3539 26%,
+          rgba(240, 166, 17, 0) 0,
+          rgba(240, 166, 17, 0) 74%,
+          #2c3539 0,
+          #2c3539 76%,
+          #282828 0
+        )
+        0 0,
+      linear-gradient(90deg, #2c3539 2%, #282828 0, #282828 98%, #2c3539 0%) 0 0
+        #282828;
+    background-size: 40px 60px;
+  }
+  
+
+.button2 {
+    background-color: #555555;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#row {
+    display: flex;
+    justify-content: center;
+}
+
+/* From Uiverse.io by Admin12121 */ 
+.switch-button {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    justify-content: center;
+    margin: auto;
+    height: 55px;
+  }
+  
+  .switch-button .switch-outer {
+    height: 100%;
+    background: #252532;
+    width: 115px;
+    border-radius: 165px;
+    -webkit-box-shadow: inset 0px 5px 10px 0px #16151c, 0px 3px 6px -2px #403f4e;
+    box-shadow: inset 0px 5px 10px 0px #16151c, 0px 3px 6px -2px #403f4e;
+    border: 1px solid #32303e;
+    padding: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .switch-button .switch-outer input[type="checkbox"] {
+    opacity: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: absolute;
+  }
+  
+  .switch-button .switch-outer .button-toggle {
+    height: 42px;
+    width: 42px;
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(#3b3a4e),
+      to(#272733)
+    );
+    background: -o-linear-gradient(#3b3a4e, #272733);
+    background: linear-gradient(#3b3a4e, #272733);
+    border-radius: 100%;
+    -webkit-box-shadow: inset 0px 5px 4px 0px #424151, 0px 4px 15px 0px #0f0e17;
+    box-shadow: inset 0px 5px 4px 0px #424151, 0px 4px 15px 0px #0f0e17;
+    position: relative;
+    z-index: 2;
+    -webkit-transition: left 0.3s ease-in;
+    -o-transition: left 0.3s ease-in;
+    transition: left 0.3s ease-in;
+    left: 0;
+  }
+  
+  .switch-button
+    .switch-outer
+    input[type="checkbox"]:checked
+    + .button
+    .button-toggle {
+    left: 58%;
+  }
+  
+  .switch-button
+    .switch-outer
+    input[type="checkbox"]:checked
+    + .button
+    .button-indicator {
+    -webkit-animation: indicator 1s forwards;
+    animation: indicator 1s forwards;
+  }
+  
+  .switch-button .switch-outer .button {
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+  }
+  
+  .switch-button .switch-outer .button-indicator {
+    height: 25px;
+    width: 25px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    border-radius: 50%;
+    border: 3px solid #ef565f;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    right: 10px;
+    position: relative;
+  }
+  
+  @-webkit-keyframes indicator {
+    30% {
+      opacity: 0;
+    }
+  
+    0% {
+      opacity: 1;
+    }
+  
+    100% {
+      opacity: 1;
+      border: 3px solid #60d480;
+      left: -68%;
+    }
+  }
+  
+  @keyframes indicator {
+    30% {
+      opacity: 0;
+    }
+  
+    0% {
+      opacity: 1;
+    }
+  
+    100% {
+      opacity: 1;
+      border: 3px solid #60d480;
+      left: -68%;
+    }
+  }
+
+/* From Uiverse.io by Z4drus */ 
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .button-container2 {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    rotate: 90deg
+  }
+  
+  .button-3d {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    border-width: 0;
+    padding: 0 8px;
+    min-width: 4em;
+    min-height: 4em;
+    box-sizing: border-box;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 20px;
+  }
+  
+  .button-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    padding: 8px 16px;
+    transform: translateY(0);
+    color: #fff;
+    background-image: linear-gradient(145deg, #6a11cb, #2575fc);
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    transition: transform 0.3s, border-radius 0.3s, background 10s;
+  }
+  
+  .button-3d:active .button-top {
+    border-radius: 10px 10px 8px 8px / 8px;
+    transform: translateY(2px);
+    background-image: linear-gradient(145deg, #2575fc, #6a11cb);
+  }
+  
+  .button-bottom {
+    position: absolute;
+    z-index: 1;
+    bottom: 4px;
+    left: 4px;
+    border-radius: 20px;
+    padding-top: 6px;
+    width: calc(100% - 8px);
+    height: calc(100% - 10px);
+    background-image: linear-gradient(145deg, #2575fc, #6a11cb);
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5);
+    transition: border-radius 0.2s, padding-top 0.2s;
+  }
+  
+  .button-base {
+    position: absolute;
+    z-index: 0;
+    top: 4px;
+    left: 0;
+    border-radius: 20px;
+    width: 100%;
+    height: calc(100% - 4px);
+    background-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.75),
+      inset 0 2px 2px rgba(0, 0, 0, 0.25);
+    transition: border-radius 0.2s, padding-top 0.2s;
+  }
+  
+  .button-3d:active .button-bottom {
+    border-radius: 10px 10px 8px 8px / 8px;
+    padding-top: 0;
+  }
+  
+  .button-3d:active .button-base {
+    border-radius: 10px 10px 8px 8px / 8px;
+  }
+  
+  
