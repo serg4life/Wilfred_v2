@@ -24,21 +24,37 @@ void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t
   }
 }
 
-void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);
-  //while(!Serial){}; //PARA DEBUG
-  
+void serverTask(void *pvParameters){
   // Iniciar SPIFFS, montar FS
   if (!SPIFFS.begin(true)) {
     Serial.println("Error al montar SPIFFS");
+    vTaskDelete(NULL);
     return;
   }
-  Wilfred.initIMU();
+
   controller.initWebController();
   controller.setOnEvent(webSocketEvent);
+
+  while(true) {
+    controller.serviceLoop();
+  }
+};
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial){}; //PARA DEBUG
+  Wilfred.initIMU();
+
+  xTaskCreatePinnedToCore(
+    serverTask,
+    "ServerTask",
+    8192,
+    NULL,
+    1,
+    NULL,
+    1
+  );
 }
 
 void loop() {
-  controller.serviceLoop();
 }

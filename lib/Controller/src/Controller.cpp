@@ -39,7 +39,7 @@ void WebController::initWebController(void){
     loadStatic();
     // Servir la página web cuando se acceda a la raíz del servidor
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/html", htmlContent);    
+        request->send(SPIFFS, "/index.html","text/html");    
     });
     // Sirve el archivo styles.css cuando el navegador lo solicita
     server.on("/css/styles.css", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -78,8 +78,10 @@ void WebController::commandHandler(String command){
         coreObject.rotate(COUNTERCLOCKWISE, 60);
     } else if (command == "motors:enable") {
         coreObject.enableMotors();
+        //webSocket.broadcastTXT("NOTIFY:motors:status:enabled");    //Para notificar a todos los clientes el estado de los motores
     } else if (command == "motors:disable") {
         coreObject.disableMotors();
+        //webSocket.broadcastTXT("NOTIFY:motors:status:disabled");
     }
 };
 

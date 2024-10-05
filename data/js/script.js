@@ -41,8 +41,18 @@ setupButton(stopButton, 'motors:stop');
 
 // Manejar los mensajes entrantes del servidor (por ejemplo, estados o respuestas del tanque)
 socket.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    console.log("Mensaje recibido del servidor:", data);
+    if(event.data.indexOf("NOTIFY:") === 0) {                  //PARA GESTIONAR NOTIFICACIONES DE ESTADOS
+        const data = JSON.parse(event.data.substring(7));
+        console.log("BROADCAST recibido del servidor:", data);
+        if(data === "motors:status:enabled") {
+            switchElement.checked = true;                       //esta parte no funciona bien
+        } else if (data === "motors:status:disabled") {
+            switchElement.checked = false;
+        }
+    } else {
+        const data = JSON.parse(event.data);
+        console.log("Mensaje recibido del servidor:", data);
+    }
 };
 
 // Manejar errores de conexión
