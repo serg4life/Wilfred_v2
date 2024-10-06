@@ -3,7 +3,7 @@
 Core::Core() : 
     motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
     motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0),
-    bno(55, 0x28, &Wire)
+    bno(55, 0x28)
 {
     pinMode(ENABLE_PIN, OUTPUT);
     pinMode(LED_BUILTIN, OUTPUT);
@@ -17,9 +17,49 @@ Core::Core() :
 };
 
 void Core::initIMU(void){
-    bno.begin();
-    bno.setMode(OPERATION_MODE_NDOF);
+    /* Initialise the sensor */
+    if (!bno.begin())
+    {
+        /* There was a problem detecting the BNO055 ... check your connections */
+        Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+        while (1);
+    }
     bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
+    bno.setMode(OPERATION_MODE_NDOF);
+    bno.enterSuspendMode();
+};
+
+void Core::wakeIMU(void){
+    bno.enterNormalMode();
+};
+
+void Core::sleepIMU(void){
+    bno.enterSuspendMode();
+};
+
+void Core::calibrateIMU(void){
+    sensors_event_t event;
+    bno.setExtCrystalUse(true);
+    while(!bno.isFullyCalibrated()){
+        bno.getEvent(&event);
+        /* Get the four calibration values (0..3) */
+        /* Any sensor data reporting 0 should be ignored, */
+        /* 3 means 'fully calibrated" */
+        uint8_t system, gyro, accel, mag = 0;
+        bno.getCalibration(&system, &gyro, &accel, &mag);
+
+        /* Display the individual values */
+        Serial.print("Sys:");
+        Serial.print(system, DEC);
+        Serial.print(" G:");
+        Serial.print(gyro, DEC);
+        Serial.print(" A:");
+        Serial.print(accel, DEC);
+        Serial.print(" M:");
+        Serial.println(mag, DEC);
+
+        delay(BNO055_SAMPLERATE_DELAY_MS);
+    }
 };
 
 bool Core::areMotorsEnabled(void){

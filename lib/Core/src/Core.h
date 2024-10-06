@@ -26,6 +26,9 @@ class Core {
         void enableMotors(void);
         void disableMotors(void);
         void initIMU(void);
+        void wakeIMU(void);
+        void sleepIMU(void);
+        void calibrateIMU(void);
         void stop(void);
         void rotate(float angles);
         void rotate(Rotations rotation, float value);
