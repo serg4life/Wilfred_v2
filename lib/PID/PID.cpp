@@ -7,11 +7,10 @@ PIDController::PIDController(double Kp_, double Ki_, double Kd_, double a_){
     a = a_;
 
     Kr = sqrt(Ki*Kd);
-
-    reference = NULL;
+    checkAngleEnabled = false;
+    reference = NAN;
     saturation = 100;
     lastInput = 0;
-    derivative = 0 ;
     integral = 0;
     lastError = 0;
     lastRef = 0;
@@ -19,8 +18,16 @@ PIDController::PIDController(double Kp_, double Ki_, double Kd_, double a_){
     es = 0;
 };
 
+void PIDController::setCheckAngle(bool newState){
+    checkAngleEnabled = newState;
+};
+
 void PIDController::updateInput(double newInput){
-    input = newInput;
+    if(checkAngleEnabled){
+        input = checkAngle(newInput);
+    } else {
+        input = newInput;
+    }
 };
 
 void PIDController::setReference(double newRef){
@@ -35,12 +42,22 @@ double PIDController::getOutput(){
     return u;
 };
 
+double PIDController::getLastError(){
+    return lastError;
+};
+
 void PIDController::compute(double deltaTime){
-    if(reference == NULL){
+    if(reference == NAN){
         return;
     }
     double i_control;
-    double error = reference - input;
+    double derivative;
+    double error;
+    if(checkAngleEnabled){
+        error = checkAngle(reference - input);
+    } else {
+        error = reference - input;
+    }
     //derivative = (error - lastError) / deltaTime; NORMAL DERIVATIVE
     derivative = (1 - a) * ((reference - a * lastRef) - (input - a * lastInput)) / deltaTime;
 

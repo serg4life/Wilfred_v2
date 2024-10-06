@@ -10,6 +10,8 @@ class PIDController {
         void compute(double deltaTime);
         void setReference(double newRef);
         void setSaturation(double newSat);
+        void setCheckAngle(bool newState);
+        double getLastError(void);
         double getOutput(void);
 
         static float checkAngle(float angle);
@@ -20,7 +22,6 @@ class PIDController {
         double Kd;
         double a;
         double Kr;
-        double derivative;
         double integral;
         double saturation;
         double reference;
@@ -31,5 +32,6 @@ class PIDController {
         double lastU;
         double u;
         double es;
+        bool checkAngleEnabled;
 };
 #endif

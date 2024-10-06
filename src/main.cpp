@@ -4,9 +4,9 @@
 #include <Controller.h>
 #include <PID.h>
 
-PIDController pid = PIDController(5.0, 2.0, 0.1, 0.9);
+PIDController pid = PIDController(5.0, 0.1, 0.05, 0.9);
 Core Wilfred = Core();
-float power = 100;
+float power = 50;
 WebController controller = WebController(Wilfred);
 
 // Declaración del timer de hardware
@@ -59,13 +59,13 @@ void serverTask(void *pvParameters){
 
 void setup() {
   Serial.begin(115200);
-  while(!Serial){}; //PARA DEBUG
+  //while(!Serial){}; //PARA DEBUG
   Wilfred.initIMU();
-
+  Wilfred.bno.enterSuspendMode();
   // Configurar el timer de hardware
   timer = timerBegin(0, 80, true);  // Timer 0, preescalador 80 (1 tick = 1 µs), contar hacia arriba
   timerAttachInterrupt(timer, &onTimer, true);  // Adjuntar la función de interrupción
-  timerAlarmWrite(timer, 100000, true);  // Disparar la interrupción cada 100 ms (100,000 µs)
+  timerAlarmWrite(timer, 10000, true);  // Disparar la interrupción cada 100 ms (100,000 µs)
   timerAlarmEnable(timer);  // Habilitar la alarma del timer
 
   xTaskCreatePinnedToCore(
@@ -79,6 +79,7 @@ void setup() {
   );
 
   pid.setReference(Wilfred.getHeading());
+  pid.setCheckAngle(true);
   Wilfred.move(FORWARD, power);
 
 }
@@ -97,7 +98,34 @@ void loop() {
     lastComputeTime = now;
     pid.compute(deltaTime);
     double u = pid.getOutput();
-    Wilfred.motor_L.setPower(power - u/2);
-    Wilfred.motor_R.setPower(power + u/2);
+    double powerR = power - u/2;
+    double powerL = power + u/2;
+
+    // if(pid.getLastError() < 0){
+    //   Wilfred.motor_R.setRotation(COUNTERCLOCKWISE);
+    //   Wilfred.motor_L.setRotation(CLOCKWISE);
+    // }
+
+    // //CAMBIAR SENTIDO RAPIDO IGNORANDO EL CONTROL
+    // if(powerR == 0){
+    //   Wilfred.motor_R.invertRotation();
+    //   powerR = 100;
+    // }
+    // if(powerL == 0){
+    //   Wilfred.motor_L.invertRotation();
+    //   powerL = 100;
+    // }
+
+    Wilfred.motor_L.setPower(powerL);
+    Wilfred.motor_R.setPower(powerR);
+    
+    // Serial.print("angle: ");
+    // Serial.print(headingData);
+    // Serial.print(" | u: ");
+    // Serial.print(u);
+    // Serial.print(" | powerR: ");
+    // Serial.print(powerR);
+    // Serial.print(" | powerL: ");
+    // Serial.println(powerL);
   }
 }

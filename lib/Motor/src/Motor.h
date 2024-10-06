@@ -13,6 +13,7 @@ class Motor {
     void writePins(float values);
     void brake(void);
     float getPower(void);
+    Rotations getRotation(void);
 
   private:
     float power;
