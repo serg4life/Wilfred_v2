@@ -4,7 +4,9 @@
 #include <Controller.h>
 #include <PID.h>
 
+PIDController pid = PIDController(5.0, 2.0, 0.1, 0.9);
 Core Wilfred = Core();
+float power = 100;
 WebController controller = WebController(Wilfred);
 
 // Declaración del timer de hardware
@@ -12,6 +14,7 @@ hw_timer_t * timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;  // Mutex para proteger los recursos compartidos
 
 volatile bool computePID = false;  // Bandera para saber cuándo ejecutar el PID
+unsigned long lastComputeTime = 0; // Para almacenar el tiempo del último cálculo
 
 // Función de interrupción del timer
 void IRAM_ATTR onTimer() {
@@ -74,13 +77,27 @@ void setup() {
     NULL,
     1
   );
+
+  pid.setReference(Wilfred.getHeading());
+  Wilfred.move(FORWARD, power);
+
 }
 
 void loop() {
+  double headingData = Wilfred.getHeading();
+  pid.updateInput(headingData);
+
   if (computePID) {
     portENTER_CRITICAL(&timerMux);
     computePID = false;
     portEXIT_CRITICAL(&timerMux);
-    //HACER COSAS
+    // Calcular tiempo transcurrido desde la última ejecución del PID
+    unsigned long now = micros();
+    double deltaTime = (now - lastComputeTime) / 1000000.0;  // Convertir a segundos
+    lastComputeTime = now;
+    pid.compute(deltaTime);
+    double u = pid.getOutput();
+    Wilfred.motor_L.setPower(power - u/2);
+    Wilfred.motor_R.setPower(power + u/2);
   }
 }
