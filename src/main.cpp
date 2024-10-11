@@ -44,7 +44,8 @@ void setup() {
   Serial.begin(115200);
   while(!Serial){}; //PARA DEBUG
   Wilfred.initIMU();
-
+  Wilfred.wakeIMU();
+  Wilfred.calibrateIMU();
   xTaskCreatePinnedToCore(
     serverTask,
     "ServerTask",

@@ -15,6 +15,7 @@ const leftButton = document.getElementById('left');
 const rightButton = document.getElementById('right');
 const stopButton = document.getElementById('stop');
 const switchElement = document.getElementById('switch');
+const calibrationButton = document.getElementById('calibrate');
 
 switchElement.addEventListener('change', function(){
     if (switchElement.checked) {
@@ -44,11 +45,12 @@ function setupButton(button, command) {
 }
 
 // Configurar los botones
-setupButton(forwardButton, 'forward');
-setupButton(backwardButton, 'backward');
-setupButton(leftButton, 'left');
-setupButton(rightButton, 'right');
+setupButton(forwardButton, 'core:forward');
+setupButton(backwardButton, 'core:backward');
+setupButton(leftButton, 'core:left');
+setupButton(rightButton, 'core:right');
 setupButton(stopButton, 'motors:stop');
+setupButton(calibrationButton, 'imu:calibrate')
 
 // Manejar los mensajes entrantes del servidor (por ejemplo, estados o respuestas del tanque)
 socket.onmessage = function(event) {

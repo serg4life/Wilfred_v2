@@ -39,7 +39,7 @@ void WebController::initWebController(void){
     loadStatic();
     // Servir la página web cuando se acceda a la raíz del servidor
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(SPIFFS, "/index.html","text/html");    
+        request->send(200, "text/html", htmlContent);    
     });
     // Sirve el archivo styles.css cuando el navegador lo solicita
     server.on("/css/styles.css", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -66,22 +66,33 @@ void WebController::serviceLoop(){
 };
 
 void WebController::commandHandler(String command){
-    if (command == "forward") {
-        coreObject.move(FORWARD, 70);
-    } else if (command == "motors:stop") {
-        coreObject.stop();
-    } else if (command == "backward") {
-        coreObject.move(BACKWARD, 70);
-    } else if (command == "right") {
-        coreObject.rotate(CLOCKWISE, 60);
-    } else if (command == "left") {
-        coreObject.rotate(COUNTERCLOCKWISE, 60);
-    } else if (command == "motors:enable") {
-        coreObject.enableMotors();
-        //webSocket.broadcastTXT("NOTIFY:motors:status:enabled");    //Para notificar a todos los clientes el estado de los motores
-    } else if (command == "motors:disable") {
-        coreObject.disableMotors();
-        //webSocket.broadcastTXT("NOTIFY:motors:status:disabled");
+    if (command.startsWith("core:")) {
+        command.substring(5);
+        if (command == "forward") {
+            coreObject.move(FORWARD, 70);
+        } else if (command == "backward") {
+            coreObject.move(BACKWARD, 70);
+        } else if (command == "right") {
+            coreObject.rotate(CLOCKWISE, 60);
+        } else if (command == "left") {
+            coreObject.rotate(COUNTERCLOCKWISE, 60);
+        }
+    } else if (command.startsWith("motors:")) {
+        command.substring(7);
+        if (command == "enable") {
+            coreObject.enableMotors();
+            //webSocket.broadcastTXT("NOTIFY:motors:status:enabled");    //Para notificar a todos los clientes el estado de los motores
+        } else if (command == "disable") {
+            //webSocket.broadcastTXT("NOTIFY:motors:status:disabled");
+            coreObject.disableMotors();
+        } else if (command == "stop") {
+            coreObject.stop();
+        }
+    } else if (command.startsWith("imu:")) {
+        command.substring(4);
+        if (command == "calibrate") {
+            coreObject.calibrateIMU();
+        }
     }
 };
 
