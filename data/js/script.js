@@ -17,6 +17,22 @@ const stopButton = document.getElementById('stop');
 const switchElement = document.getElementById('switch');
 const calibrationButton = document.getElementById('calibrate');
 
+const imuRadio = document.querySelectorAll('input[name="imu"]');
+
+function handleIMUChange(event){
+    const selectedValue = event.target.value;
+
+    if (selectedValue === "activate" ) {
+        sendCommand('imu:activate');
+    } else if (selectedValue === "deactivate") {
+        sendCommand('imu:deactivate');
+    }
+};
+
+imuRadio.forEach(radio => {
+    radio.addEventListener('change',handleIMUChange); 
+});
+
 switchElement.addEventListener('change', function(){
     if (switchElement.checked) {
         sendCommand('motors:enable');

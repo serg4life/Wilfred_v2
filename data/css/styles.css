@@ -557,12 +557,12 @@ h1 {
   margin-left: 5px;
 }
 
-button:hover {
+.button_calibrate:hover {
   transform: translate(-0.05em, -0.05em);
   box-shadow: 0.15em 0.15em;
 }
 
-button:active {
+.button_calibrate:active {
   transform: translate(0.05em, 0.05em);
   box-shadow: 0.05em 0.05em;
 }
