@@ -41,6 +41,9 @@ switchElement.addEventListener('change', function(){
     }
 });
 
+calibrationButton.addEventListener('mousedown' , () => sendCommand('imu:calibrate'));
+calibrationButton.addEventListener('touchstart' , () => sendCommand('imu:calibrate'));
+
 function sendPowerValue(power){
     document.getElementById('powerSlider').textContent = power;
     var message = {
@@ -66,7 +69,6 @@ setupButton(backwardButton, 'core:backward');
 setupButton(leftButton, 'core:left');
 setupButton(rightButton, 'core:right');
 setupButton(stopButton, 'motors:stop');
-setupButton(calibrationButton, 'imu:calibrate')
 
 // Manejar los mensajes entrantes del servidor (por ejemplo, estados o respuestas del tanque)
 socket.onmessage = function(event) {

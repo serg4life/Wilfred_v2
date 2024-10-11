@@ -30,11 +30,11 @@ Core::Core() :
     bno(55, 0x28)
 {
     pinMode(ENABLE_PIN, OUTPUT);
+    digitalWrite(ENABLE_PIN, LOW);
     pinMode(LED_RED, OUTPUT);
     pinMode(LED_GREEN, OUTPUT);
     pinMode(LED_BLUE, OUTPUT);
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(ENABLE_PIN, LOW);  
+    pinMode(LED_BUILTIN, OUTPUT);  
     motor_R.setRotation(CLOCKWISE);
     motor_L.setRotation(COUNTERCLOCKWISE);
     lastDirection = FORWARD;
@@ -66,6 +66,8 @@ void Core::sleepIMU(void){
 };
 
 void Core::calibrateIMU(void){
+    wakeIMU();
+    digitalWrite(LEDR, HIGH);
     sensors_event_t event;
     uint8_t system, gyro, accel, mag = 0;
     while(!(system == 3 && gyro == 3 && mag == 3)){
@@ -94,6 +96,7 @@ void Core::calibrateIMU(void){
     bno.getSensorOffsets(newCalib);
     displaySensorOffsets(newCalib);
     bno.setSensorOffsets(newCalib);
+    digitalWrite(LEDR, LOW);
 };
 
 bool Core::areMotorsEnabled(void){

@@ -67,7 +67,7 @@ void WebController::serviceLoop(){
 
 void WebController::commandHandler(String command){
     if (command.startsWith("core:")) {
-        command.substring(5);
+        command = command.substring(5);
         if (command == "forward") {
             coreObject.move(FORWARD, 70);
         } else if (command == "backward") {
@@ -78,7 +78,7 @@ void WebController::commandHandler(String command){
             coreObject.rotate(COUNTERCLOCKWISE, 60);
         }
     } else if (command.startsWith("motors:")) {
-        command.substring(7);
+        command = command.substring(7);
         if (command == "enable") {
             coreObject.enableMotors();
             //webSocket.broadcastTXT("NOTIFY:motors:status:enabled");    //Para notificar a todos los clientes el estado de los motores
@@ -89,7 +89,7 @@ void WebController::commandHandler(String command){
             coreObject.stop();
         }
     } else if (command.startsWith("imu:")) {
-        command.substring(4);
+        command = command.substring(4);
         if (command == "calibrate") {
             coreObject.calibrateIMU();
         } else if (command == "activate") {
