@@ -21,7 +21,7 @@ void displaySensorOffsets(const adafruit_bno055_offsets_t &calibData)
     Serial.print(calibData.accel_radius);
 
     Serial.print("\nMag Radius: ");
-    Serial.print(calibData.mag_radius);
+    Serial.println(calibData.mag_radius);
 }
 
 Core::Core() : 
@@ -30,6 +30,9 @@ Core::Core() :
     bno(55, 0x28)
 {
     pinMode(ENABLE_PIN, OUTPUT);
+    pinMode(LED_RED, OUTPUT);
+    pinMode(LED_GREEN, OUTPUT);
+    pinMode(LED_BLUE, OUTPUT);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(ENABLE_PIN, LOW);  
     motor_R.setRotation(CLOCKWISE);
