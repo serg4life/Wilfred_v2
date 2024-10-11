@@ -24,6 +24,17 @@ switchElement.addEventListener('change', function(){
     }
 });
 
+function sendPowerValue(power){
+    document.getElementById('powerSlider').textContent = power;
+    var message = {
+        command:"motors:power:set",
+        value: parseInt(power)
+    };
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify(message));
+    }
+}
+
 // Eventos de mantener presionado y soltar los botones
 function setupButton(button, command) {
     button.addEventListener('mousedown', () => sendCommand(command));

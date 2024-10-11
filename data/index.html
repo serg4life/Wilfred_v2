@@ -13,9 +13,9 @@
     <link rel="mask-icon" href="/ico/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-    <link rel="icon" type="image/x-icon" href="/ico/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="ico/favicon.ico">
 
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     
     <title>Wilfred Controller</title>
 </head>
@@ -34,45 +34,88 @@
         </div>
     </label>
 
-    <div class="controls">
-        <div class="button-container">
-        <div class="button-container2">
-            <button class="button-3d" id="forward">
-            <div class="button-top">
-                <span class="material-icons">❮</span>
-            </div>
-            <div class="button-bottom"></div>
-            <div class="button-base"></div>
-            </button>
-            <button class="button-3d" id="backward">
-            <div class="button-top">
-                <span class="material-icons">❯</span>
-            </div>
-            <div class="button-bottom"></div>
-            <div class="button-base"></div>
-            </button>
-            </div>
-            <div class="button-container">
-            <button class="button-3d" id="left">
-                <div class="button-top">
-                <span class="material-icons">❮</span>
-                </div>
-                <div class="button-bottom"></div>
-                <div class="button-base"></div>
-            </button>
-            <button class="button-3d" id="right">
-                <div class="button-top">
-                <span class="material-icons">❯</span>
-                </div>
-                <div class="button-bottom"></div>
-                <div class="button-base"></div>
-            </button>
-            </div>
-        </div>
+    <div class="container-2">
+        <div class="pane">
+            <label class="label">
+                <span>SI</span>
+                <input id="left" class="input-2" name="radio" type="radio">
+            </label>
+            <label class="label">
+                <span>NO</span>
+                <input id="middle" class="input-2" checked="checked" name="radio" type="radio">
+            </label>
+            <label class="label">
+                <span>PID</span>
+            </label>
+            <span class="selection"></span>
+        </div>  
     </div>
 
+    <div class="controls">
+            <div class="button-container">
+                <button class="button-3d" id="forward">
+                    <div class="button-top">
+                        <span class="material-icons">❮</span>
+                    </div>
+                    <div class="button-bottom"></div>
+                    <div class="button-base"></div>
+                </button>
+                <button class="button-3d" id="backward">
+                    <div class="button-top">
+                        <span class="material-icons">❯</span>
+                    </div>
+                    <div class="button-bottom"></div>
+                    <div class="button-base"></div>
+                </button>
+            </div>
+            <div class="button-container">
+                <button class="button-3d" id="left">
+                    <div class="button-top">
+                        <span class="material-icons">❮</span>
+                    </div>
+                    <div class="button-bottom"></div>
+                    <div class="button-base"></div>
+                </button>
+                <button class="button-3d" id="right">
+                    <div class="button-top">
+                        <span class="material-icons">❯</span>
+                    </div>
+                    <div class="button-bottom"></div>
+                    <div class="button-base"></div>
+                </button>
+            </div>
+
+            <div class="button-container">
+                <form class="form">
+                    <p class="title">PID</p>
+                        <div class="flex">
+                        <label>
+                            <input class="input" type="text" placeholder="" required="">
+                            <span>Kp</span>
+                        </label>
+                        <label>
+                            <input class="input" type="text" placeholder="" required="">
+                            <span>Ki</span>
+                        </label>
+                        <label>
+                            <input class="input" type="text" placeholder="" required="">
+                            <span>Kd</span>
+                        </label>
+                        
+                        <label>
+                            <input class="input" type="text" placeholder="" required="">
+                            <span>a</span>
+                        </label>
+                    </div>  
+                    <button class="submit">SET</button>
+                </form>
+            </div>
+        </div>
+        <input id="powerSlider" class="slider" value="50" max="100" min="0" type="range" oninput="sendPowerValue(this.value)">
+    </div>
 </div>
-<script src="/js/script.js?v=1.0"></script>
+
+<script src="js/script.js?v=1.0"></script>
 </body>
 
 </html>
