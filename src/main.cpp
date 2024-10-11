@@ -44,15 +44,7 @@ void setup() {
   Serial.begin(115200);
   while(!Serial){}; //PARA DEBUG
   Wilfred.initIMU();
-  xTaskCreatePinnedToCore(
-    serverTask,
-    "ServerTask",
-    8192,
-    NULL,
-    1,
-    NULL,
-    1
-  );
+  xTaskCreatePinnedToCore(serverTask, "ServerTask", 8192, NULL, 1, NULL, 1);
 }
 
 void loop() {

@@ -23,6 +23,9 @@ typedef enum {
 class Core {
     public:
         Core();
+
+        static void displaySensorOffsets(const adafruit_bno055_offsets_t &calibData);
+
         void enableMotors(void);
         void disableMotors(void);
         void initIMU(void);
@@ -38,6 +41,7 @@ class Core {
 
         int8_t getTemperature(void);
         double getHeading(void);
+        SemaphoreHandle_t getMutex(void);
 
         Adafruit_BNO055 bno;
         Motor motor_R;
@@ -48,6 +52,7 @@ class Core {
         double lastHeading;
         int8_t lastTemperature;
         bool areMotorsEnabled_var;
+        SemaphoreHandle_t i2cMutex;
 };
 
 #endif
