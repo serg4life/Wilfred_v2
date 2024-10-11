@@ -92,6 +92,10 @@ void WebController::commandHandler(String command){
         command.substring(4);
         if (command == "calibrate") {
             coreObject.calibrateIMU();
+        } else if (command == "activate") {
+            coreObject.wakeIMU();
+        } else if (command == "deactivate") {
+            coreObject.sleepIMU();
         }
     }
 };
