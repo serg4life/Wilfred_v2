@@ -1,7 +1,7 @@
 /*Wilfred Web Controller at 192.168.4.1*/
 
 #include <Core.h>
-#include <Controller.h>
+#include <WilfredServer.h>
 
 Core Wilfred = Core();
 WebController controller = WebController(Wilfred);

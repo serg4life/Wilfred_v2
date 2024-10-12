@@ -1,6 +1,6 @@
 // Conexión WebSocket al servidor (reemplazar con la IP del servidor)
-const socket = new WebSocket('ws://192.168.4.1:8080'); // Asegúrate de que el servidor esté en ws:// o wss://
-
+var host = window.location.hostname;
+const socket = new WebSocket('ws://${host}:8080'); // Asegúrate de que el servidor esté en ws:// o wss://
 // Función para enviar comandos al servidor
 function sendCommand(command) {
     if (socket.readyState === WebSocket.OPEN) {

@@ -1,8 +1,9 @@
-#include <Controller.h>
+#include <WilfredServer.h>
 #include <Core.h>
+#include <Credentials.h>
 
-const char *ssid = "Wilfred";
-const char *password = "12345678";
+const char *apSSID = "Wilfred";
+const char *apPASSWORD = "12345678";
 
 String MOTORS_STATE = "DISABLED";
 String htmlContent;
@@ -26,13 +27,29 @@ bool WebController::loadStatic(){
 };
 
 void WebController::initWebController(void){
-    if (!WiFi.softAP(ssid, password)) {
-        log_e("Soft AP creation failed.");
-    while(1);
+    WiFi.mode(WIFI_STA);    /*FUNCION INTERESANTE EL MODO DUAL AP + STATION*/
+    WiFi.begin(WIFI_SSID, WIFI_PW);
+    unsigned long startAttemptTime = millis();
+
+    // Intentar conectar hasta que se supere el tiempo límite
+    while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < WIFI_TIMEOUT_MS) {
+        Serial.print(".");
+        delay(500);  // Pausa breve para no saturar el puerto serie
     }
-    IPAddress myIP = WiFi.softAPIP();
-    Serial.print("AP IP address: ");
-    Serial.println(myIP);
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("\nConectado a la red Wi-Fi");
+        Serial.print("Dirección IP: ");
+        Serial.println(WiFi.localIP());
+    } else {
+        Serial.println("\nNo se pudo conectar a la red Wi-Fi, cambiando a modo Access Point...");
+        WiFi.mode(WIFI_AP);  // Cambiar a modo Access Point
+        if (!WiFi.softAP(apSSID, apPASSWORD)) {
+            log_e("Soft AP creation failed.");
+            return;
+        }
+        Serial.print("AP IP address: ");
+        Serial.println(WiFi.softAPIP());
+    }
 
     webSocket.begin();
     server.begin();

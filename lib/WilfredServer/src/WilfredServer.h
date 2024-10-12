@@ -2,12 +2,15 @@
 #define WEB_CONTROLLER_H
 
 #include <WiFi.h>
+#include <ESPmDNS.h>
 #include <AsyncTCP.h>
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
 #include <WebSocketsServer.h>
 #include <SPIFFS.h>
 #include <Core.h>
+
+#define WIFI_TIMEOUT_MS 5000
 
 class WebController {
     public:
