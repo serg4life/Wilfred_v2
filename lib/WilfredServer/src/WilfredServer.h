@@ -8,21 +8,19 @@
 #include <ESPAsyncWebServer.h>
 #include <WebSocketsServer.h>
 #include <SPIFFS.h>
-#include <Core.h>
 
 #define WIFI_TIMEOUT_MS 5000
 
 class WebController {
     public:
-        WebController(Core param_core);
+        WebController(void);
         void initWebController(void);
-        void commandHandler(String command);
         void setOnEvent(WebSocketsServer::WebSocketServerEvent cbEvent);
         void serviceLoop(void);
         bool loadStatic(void);
+        void provideFiles(void);
 
     private:
-        Core coreObject;
         WebSocketsServer webSocket;
 };
 

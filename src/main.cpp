@@ -2,9 +2,11 @@
 
 #include <Core.h>
 #include <WilfredServer.h>
+#include <CommandHandler.h>
 
 Core Wilfred = Core();
-WebController controller = WebController(Wilfred);
+WebController controller = WebController();
+CommandHandler handler = CommandHandler();
 
 void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t length) {
   if (type == WStype_TEXT) {
@@ -20,7 +22,7 @@ void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t
     }
 
     String command = doc["command"];
-    controller.commandHandler(command); // Controlar el tanque según el comando recibido
+    handler.processCommand(command); // Controlar el tanque según el comando recibido
   }
 }
 
@@ -44,6 +46,7 @@ void setup() {
   Serial.begin(115200);
   while(!Serial){}; //PARA DEBUG
   delay(100);
+  handler.assignCore(Wilfred);
   Serial.print("setup() running on core ");
   Serial.println(xPortGetCoreID());
   Wilfred.initIMU();
