@@ -23,7 +23,7 @@ typedef enum {
 class Core {
     public:
         Core();
-
+        ~Core();
         static void displaySensorOffsets(const adafruit_bno055_offsets_t &calibData);
 
         void enableMotors(void);

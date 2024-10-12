@@ -43,9 +43,14 @@ void serverTask(void *pvParameters){
 void setup() {
   Serial.begin(115200);
   while(!Serial){}; //PARA DEBUG
+  delay(100);
+  Serial.print("setup() running on core ");
+  Serial.println(xPortGetCoreID());
   Wilfred.initIMU();
   xTaskCreatePinnedToCore(serverTask, "ServerTask", 8192, NULL, 1, NULL, 1);
 }
 
 void loop() {
+  //Serial.print("loop() running on core ");
+  //Serial.println(xPortGetCoreID());
 }

@@ -6,39 +6,34 @@ void calibrationTask(void *pvParameters){
     Adafruit_BNO055 bno = instance -> bno;
     sensors_event_t event;
     uint8_t system, gyro, accel, mag = 0;
-    SemaphoreHandle_t i2cMutex = instance -> getMutex();
+    //SemaphoreHandle_t i2cMutex = instance -> getMutex();
+    while(!(system == 3 && gyro == 3 && mag == 3)){
+        bno.getEvent(&event);
+        /* Get the four calibration values (0..3) */
+        /* Any sensor data reporting 0 should be ignored, */
+        /* 3 means 'fully calibrated" */
+        bno.getCalibration(&system, &gyro, &accel, &mag);
 
-    if(xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {
-        while(!(system == 3 && gyro == 3 && mag == 3)){
-            bno.getEvent(&event);
-            /* Get the four calibration values (0..3) */
-            /* Any sensor data reporting 0 should be ignored, */
-            /* 3 means 'fully calibrated" */
-            bno.getCalibration(&system, &gyro, &accel, &mag);
+        /* Display the individual values */
+        Serial.print("Sys:");
+        Serial.print(system, DEC);
+        Serial.print(" G:");
+        Serial.print(gyro, DEC);
+        Serial.print(" A:");
+        Serial.print(accel, DEC);
+        Serial.print(" M:");
+        Serial.println(mag, DEC);
 
-            /* Display the individual values */
-            Serial.print("Sys:");
-            Serial.print(system, DEC);
-            Serial.print(" G:");
-            Serial.print(gyro, DEC);
-            Serial.print(" A:");
-            Serial.print(accel, DEC);
-            Serial.print(" M:");
-            Serial.println(mag, DEC);
-
-            delay(BNO055_SAMPLERATE_DELAY_MS);
-        }
-        Serial.println("\nFully calibrated!");
-        Serial.println("--------------------------------");
-        Serial.println("Calibration Results: ");
-        adafruit_bno055_offsets_t newCalib;
-        bno.getSensorOffsets(newCalib);
-        instance -> displaySensorOffsets(newCalib);
-        bno.setSensorOffsets(newCalib);
-        xSemaphoreGive(i2cMutex);
-    } else {
-        Serial.println("No se pudo adquirir el mutex.");
+        delay(BNO055_SAMPLERATE_DELAY_MS);
+        //vTaskDelay(BNO055_SAMPLERATE_DELAY_MS / portTICK_PERIOD_MS);
     }
+    Serial.println("\nFully calibrated!");
+    Serial.println("--------------------------------");
+    Serial.println("Calibration Results: ");
+    adafruit_bno055_offsets_t newCalib;
+    bno.getSensorOffsets(newCalib);
+    instance -> displaySensorOffsets(newCalib);
+    bno.setSensorOffsets(newCalib);
     vTaskDelete(NULL);
   }
 
@@ -96,7 +91,7 @@ void Core::initIMU(void){
     {
         /* There was a problem detecting the BNO055 ... check your connections */
         Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-        while (1);
+        return;
     }
     bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
     bno.setMode(OPERATION_MODE_NDOF);
@@ -109,28 +104,16 @@ SemaphoreHandle_t Core::getMutex(){
 };
 
 void Core::wakeIMU(void){
-    if(xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {     /*Indica que la tarea puede esperar indefinidamente hasta que el mutex esté disponible.*/
-        bno.enterNormalMode();
-        //delay(100);     /*Retraso para que le de tiempo a hacer cositas.*/
-        xSemaphoreGive(i2cMutex);
-    } else {
-        Serial.println("No se pudo adquirir el mutex.");
-    }
+    bno.enterNormalMode();
 };
 
 void Core::sleepIMU(void){
-   if(xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {
-        bno.enterSuspendMode();
-        //delay(100);     /*Retraso para que le de tiempo a hacer cositas.*/
-        xSemaphoreGive(i2cMutex);
-    } else {
-        Serial.println("No se pudo adquirir el mutex.");
-    }
+    bno.enterSuspendMode();
 };
 
 void Core::calibrateIMU(void){
     digitalWrite(LEDR, HIGH);
-    xTaskCreatePinnedToCore(calibrationTask, "CalibrationTask", 4000, this, 1, NULL, 0);
+    xTaskCreatePinnedToCore(calibrationTask, "CalibrationTask", 2000, this, 1, NULL, 0);
     digitalWrite(LEDR, LOW);
 };
 
@@ -196,22 +179,13 @@ void Core::changeDirection(void){
 };
 
 double Core::getHeading(void){
-    if(xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {
-        imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
-        xSemaphoreGive(i2cMutex);
-        lastHeading = euler.x();
-    } else {
-        Serial.println("No se pudo adquirir el mutex.");
-    }
+    imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+    lastHeading = euler.x();
     return lastHeading;
 };
 
 int8_t Core::getTemperature(void){
-    if(xSemaphoreTake(i2cMutex, portMAX_DELAY) == pdTRUE) {
-        lastTemperature = bno.getTemp();
-    } else {
-        Serial.println("No se pudo adquirir el mutex.");
-    }
+    lastTemperature = bno.getTemp();
     return lastTemperature;
 };
 
