@@ -24,8 +24,8 @@ void calibrationTask(void *pvParameters){
         Serial.print(" M:");
         Serial.println(mag, DEC);
 
-        delay(BNO055_SAMPLERATE_DELAY_MS);
-        //vTaskDelay(BNO055_SAMPLERATE_DELAY_MS / portTICK_PERIOD_MS);
+        //delay(BNO055_SAMPLERATE_DELAY_MS);
+        vTaskDelay(BNO055_SAMPLERATE_DELAY_MS / portTICK_PERIOD_MS);
     }
     Serial.println("\nFully calibrated!");
     Serial.println("--------------------------------");
