@@ -112,9 +112,11 @@ void Core::sleepIMU(void){
 };
 
 void Core::calibrateIMU(void){
+    wakeIMU();
     digitalWrite(LEDR, HIGH);
     xTaskCreatePinnedToCore(calibrationTask, "CalibrationTask", 2000, this, 1, NULL, 0);
     digitalWrite(LEDR, LOW);
+    sleepIMU();
 };
 
 bool Core::areMotorsEnabled(void){
