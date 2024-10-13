@@ -114,9 +114,11 @@ void Core::sleepIMU(void){
 void Core::calibrateIMU(void){
     adafruit_bno055_opmode_t modeback = bno.getMode();
     wakeIMU();
-    ledRGB.hueToRGB(120);
+    ledRGB.hueToRGB(200);
+    ledRGB.on();
     xTaskCreatePinnedToCore(calibrationTask, "CalibrationTask", 2000, this, 1, NULL, 0);
     bno.setMode(modeback);
+    ledRGB.blynk(3, 250);
 };
 
 

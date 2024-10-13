@@ -19,6 +19,27 @@ void StatusRGB::hueToRGB(uint8_t hue){
     hueToRGB(hue, brightness);
 };
 
+void StatusRGB::on(void){
+    ledcWrite(1, R); // write red component to channel 1, etc.
+    ledcWrite(2, G);   
+    ledcWrite(3, B);
+}
+
+void StatusRGB::off(void){
+    ledcWrite(1, 255); // write red component to channel 1, etc.
+    ledcWrite(2, 255);   
+    ledcWrite(3, 255);
+};
+
+void StatusRGB::blynk(uint8_t times, int interval_millis){
+    for(int i=0; i<times; i++){
+        on();
+        delay(interval_millis);
+        off();
+        delay(interval_millis);
+    };
+};
+
 void StatusRGB::hueToRGB(uint8_t hue, uint8_t brightness_){
     brightness = brightness_;
     uint16_t scaledHue = (hue * 6);
@@ -70,7 +91,4 @@ void StatusRGB::hueToRGB(uint8_t hue, uint8_t brightness_){
         B = prev;
     break;
     }
-    ledcWrite(1, R); // write red component to channel 1, etc.
-    ledcWrite(2, G);   
-    ledcWrite(3, B);
 };

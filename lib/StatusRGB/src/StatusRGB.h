@@ -8,6 +8,9 @@ class StatusRGB {
         StatusRGB(void);
         void hueToRGB(uint8_t hue, uint8_t brightness_);
         void hueToRGB(uint8_t hue);
+        void off(void);
+        void on(void);
+        void blynk(uint8_t times, int interval_millis);
         uint8_t brightness;  // 255 is maximum brightness, but can be changed.  Might need 256 for common anode to fully turn off.
 
     private:
