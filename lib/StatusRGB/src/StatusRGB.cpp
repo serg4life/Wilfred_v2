@@ -1,10 +1,8 @@
 #include <StatusRGB.h>
 
 
-statusRGB::statusRGB(void){
-    ledR = 14;
-    ledG = 15;
-    ledB = 16;
+StatusRGB::StatusRGB(void){
+    //uint8_t ledArray[3] = {1, 2, 3}; // three led channels
     ledcAttachPin(ledR, 1); // assign RGB led pins to channels
     ledcAttachPin(ledG, 2);
     ledcAttachPin(ledB, 3);
@@ -17,7 +15,12 @@ statusRGB::statusRGB(void){
     ledcSetup(3, 12000, 8);
 };
 
-void statusRGB::hueToRGB(uint8_t hue){
+void StatusRGB::hueToRGB(uint8_t hue){
+    hueToRGB(hue, brightness);
+};
+
+void StatusRGB::hueToRGB(uint8_t hue, uint8_t brightness_){
+    brightness = brightness_;
     uint16_t scaledHue = (hue * 6);
     uint8_t segment = scaledHue / 256; // segment 0 to 5 around the
                                             // color wheel
@@ -67,4 +70,7 @@ void statusRGB::hueToRGB(uint8_t hue){
         B = prev;
     break;
     }
+    ledcWrite(1, R); // write red component to channel 1, etc.
+    ledcWrite(2, G);   
+    ledcWrite(3, B);
 };

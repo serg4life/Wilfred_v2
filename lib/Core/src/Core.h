@@ -7,6 +7,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
+#include <StatusRGB.h>
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 typedef enum {FORWARD, BACKWARD} Directions;
@@ -23,7 +24,6 @@ typedef enum {
 class Core {
     public:
         Core();
-        ~Core();
         static void displaySensorOffsets(const adafruit_bno055_offsets_t &calibData);
 
         void enableMotors(void);
@@ -41,18 +41,17 @@ class Core {
 
         int8_t getTemperature(void);
         double getHeading(void);
-        SemaphoreHandle_t getMutex(void);
 
         Adafruit_BNO055 bno;
         Motor motor_R;
         Motor motor_L;
+        StatusRGB ledRGB;
 
     private:
         Directions lastDirection;
         double lastHeading;
         int8_t lastTemperature;
         bool areMotorsEnabled_var;
-        SemaphoreHandle_t i2cMutex;
 };
 
 #endif

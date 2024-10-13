@@ -1,6 +1,5 @@
 #include <Core.h>
 
-
 void calibrationTask(void *pvParameters){
     Core *instance = static_cast<Core *>(pvParameters);
     Adafruit_BNO055 bno = instance -> bno;
@@ -37,6 +36,45 @@ void calibrationTask(void *pvParameters){
     vTaskDelete(NULL);
   }
 
+
+Core::Core() : 
+    motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
+    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0),
+    bno(55, 0x28),
+    ledRGB()
+{
+    pinMode(ENABLE_PIN, OUTPUT);
+    digitalWrite(ENABLE_PIN, LOW);
+    pinMode(LED_RED, OUTPUT);
+    pinMode(LED_GREEN, OUTPUT);
+    pinMode(LED_BLUE, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);  
+    motor_R.setRotation(CLOCKWISE);
+    motor_L.setRotation(COUNTERCLOCKWISE);
+    lastDirection = FORWARD;
+    areMotorsEnabled_var = false;
+    lastHeading = 0;
+    lastTemperature = 0;
+    ledRGB.brightness = 20;
+};
+
+
+void Core::initIMU(void){
+    /* Initialise the sensor */
+    if (!bno.begin())
+    {
+        /* There was a problem detecting the BNO055 ... check your connections */
+        Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+        return;
+    }
+    bno.setMode(OPERATION_MODE_CONFIG);
+    bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
+    bno.setExtCrystalUse(true);
+    bno.setMode(OPERATION_MODE_NDOF);
+    bno.enterSuspendMode();
+};
+
+
 void Core::displaySensorOffsets(const adafruit_bno055_offsets_t &calibData)
 {
     Serial.print("Accelerometer: ");
@@ -61,68 +99,31 @@ void Core::displaySensorOffsets(const adafruit_bno055_offsets_t &calibData)
     Serial.println(calibData.mag_radius);
 }
 
-Core::Core() : 
-    motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
-    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0),
-    bno(55, 0x28)
-{
-    pinMode(ENABLE_PIN, OUTPUT);
-    digitalWrite(ENABLE_PIN, LOW);
-    pinMode(LED_RED, OUTPUT);
-    pinMode(LED_GREEN, OUTPUT);
-    pinMode(LED_BLUE, OUTPUT);
-    pinMode(LED_BUILTIN, OUTPUT);  
-    motor_R.setRotation(CLOCKWISE);
-    motor_L.setRotation(COUNTERCLOCKWISE);
-    lastDirection = FORWARD;
-    areMotorsEnabled_var = false;
-    lastHeading = 0;
-    lastTemperature = 0;
-    i2cMutex = xSemaphoreCreateMutex();
-};
-
-Core::~Core(){
-    vSemaphoreDelete(i2cMutex);
-};
-
-void Core::initIMU(void){
-    /* Initialise the sensor */
-    if (!bno.begin())
-    {
-        /* There was a problem detecting the BNO055 ... check your connections */
-        Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-        return;
-    }
-    bno.setMode(OPERATION_MODE_CONFIG);
-    bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
-    bno.setExtCrystalUse(true);
-    bno.setMode(OPERATION_MODE_NDOF);
-    bno.enterSuspendMode();
-};
-
-SemaphoreHandle_t Core::getMutex(){
-    return i2cMutex;
-};
 
 void Core::wakeIMU(void){
     bno.enterNormalMode();
     bno.setMode(OPERATION_MODE_NDOF);
 };
 
+
 void Core::sleepIMU(void){
     bno.enterSuspendMode();
 };
 
+
 void Core::calibrateIMU(void){
     adafruit_bno055_opmode_t modeback = bno.getMode();
     wakeIMU();
+    ledRGB.hueToRGB(120);
     xTaskCreatePinnedToCore(calibrationTask, "CalibrationTask", 2000, this, 1, NULL, 0);
     bno.setMode(modeback);
 };
 
+
 bool Core::areMotorsEnabled(void){
     return areMotorsEnabled_var;
 };
+
 
 void Core::enableMotors(void){
     stop();
@@ -131,6 +132,7 @@ void Core::enableMotors(void){
     digitalWrite(LED_BUILTIN, HIGH);
 };
 
+
 void Core::disableMotors(void){
     areMotorsEnabled_var = false;
     stop();
@@ -138,13 +140,16 @@ void Core::disableMotors(void){
     digitalWrite(LED_BUILTIN, LOW);
 };
 
+
 void Core::stop(void){
     motor_L.setPower(0);
     motor_R.setPower(0);
 };
 
+
 void Core::rotate(float angles){
 };
+
 
 void Core::rotate(Rotations rotation, float value){
     switch (rotation)
@@ -162,6 +167,7 @@ void Core::rotate(Rotations rotation, float value){
     motor_L.setPower(value);
     motor_R.setPower(value);
 };
+
 
 void Core::changeDirection(void){
     Directions tempDirection;
@@ -181,16 +187,19 @@ void Core::changeDirection(void){
     lastDirection = tempDirection;
 };
 
+
 double Core::getHeading(void){
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     lastHeading = euler.x();
     return lastHeading;
 };
 
+
 int8_t Core::getTemperature(void){
     lastTemperature = bno.getTemp();
     return lastTemperature;
 };
+
 
 void Core::move(Directions direction, float power_value){
     switch (direction)
@@ -210,3 +219,4 @@ void Core::move(Directions direction, float power_value){
     motor_L.setPower(power_value);
     motor_R.setPower(power_value);
 };
+
