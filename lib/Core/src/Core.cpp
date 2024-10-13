@@ -93,9 +93,10 @@ void Core::initIMU(void){
         Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
         return;
     }
+    bno.setMode(OPERATION_MODE_CONFIG);
     bno.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P1);     //remap, X points forward
-    bno.setMode(OPERATION_MODE_NDOF);
     bno.setExtCrystalUse(true);
+    bno.setMode(OPERATION_MODE_NDOF);
     bno.enterSuspendMode();
 };
 
@@ -105,6 +106,7 @@ SemaphoreHandle_t Core::getMutex(){
 
 void Core::wakeIMU(void){
     bno.enterNormalMode();
+    bno.setMode(OPERATION_MODE_NDOF);
 };
 
 void Core::sleepIMU(void){
@@ -112,11 +114,10 @@ void Core::sleepIMU(void){
 };
 
 void Core::calibrateIMU(void){
+    adafruit_bno055_opmode_t modeback = bno.getMode();
     wakeIMU();
-    digitalWrite(LEDR, HIGH);
     xTaskCreatePinnedToCore(calibrationTask, "CalibrationTask", 2000, this, 1, NULL, 0);
-    digitalWrite(LEDR, LOW);
-    sleepIMU();
+    bno.setMode(modeback);
 };
 
 bool Core::areMotorsEnabled(void){
