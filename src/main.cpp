@@ -68,6 +68,7 @@ void setup() {
   //Serial.println(xPortGetCoreID());
   Wilfred.initIMU();
   Wilfred.wakeIMU();
+  delay(100);         //Dar margen de acceso al bus desde el otro core.
   Wilfred.calibrateIMU();
   // Configurar el timer de hardware
   timer = timerBegin(0, 80, true);  // Timer 0, preescalador 80 (1 tick = 1 µs), contar hacia arriba

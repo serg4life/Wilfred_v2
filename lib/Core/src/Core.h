@@ -34,6 +34,7 @@ class Core {
         void onIMU(void);
         void sleepIMU(void);
         void calibrateIMU(void);
+        void calibrateIMU(bool task);
         void stop(void);
         void rotate(float angles);
         void rotate(Rotations rotation, float value);

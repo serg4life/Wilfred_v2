@@ -1,41 +1,5 @@
 #include <Core.h>
 
-void calibrationTask(void *pvParameters){
-    Core *instance = static_cast<Core *>(pvParameters);
-    Adafruit_BNO055 bno = instance -> bno;
-    sensors_event_t event;
-    uint8_t system, gyro, accel, mag = 0;
-    //SemaphoreHandle_t i2cMutex = instance -> getMutex();
-    while(!(system == 3 && gyro == 3 && mag == 3)){
-        bno.getEvent(&event);
-        /* Get the four calibration values (0..3) */
-        /* Any sensor data reporting 0 should be ignored, */
-        /* 3 means 'fully calibrated" */
-        bno.getCalibration(&system, &gyro, &accel, &mag);
-
-        /* Display the individual values */
-        Serial.print("Sys:");
-        Serial.print(system, DEC);
-        Serial.print(" G:");
-        Serial.print(gyro, DEC);
-        Serial.print(" A:");
-        Serial.print(accel, DEC);
-        Serial.print(" M:");
-        Serial.println(mag, DEC);
-
-        //delay(BNO055_SAMPLERATE_DELAY_MS);
-        vTaskDelay(BNO055_SAMPLERATE_DELAY_MS / portTICK_PERIOD_MS);
-    }
-    Serial.println("\nFully calibrated!");
-    Serial.println("--------------------------------");
-    Serial.println("Calibration Results: ");
-    adafruit_bno055_offsets_t newCalib;
-    bno.getSensorOffsets(newCalib);
-    instance -> displaySensorOffsets(newCalib);
-    bno.setSensorOffsets(newCalib);
-    vTaskDelete(NULL);
-  }
-
 
 Core::Core() : 
     motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
@@ -73,6 +37,43 @@ void Core::initIMU(void){
     bno.setMode(OPERATION_MODE_NDOF);
     bno.enterSuspendMode();
 };
+
+
+void calibrationTask(void *pvParameters){
+    Core *instance = static_cast<Core *>(pvParameters);
+    Adafruit_BNO055 bno = instance -> bno;
+    sensors_event_t event;
+    uint8_t system, gyro, accel, mag = 0;
+    //SemaphoreHandle_t i2cMutex = instance -> getMutex();
+    while(!(system == 3 && gyro == 3 && mag == 3)){
+        bno.getEvent(&event);
+        /* Get the four calibration values (0..3) */
+        /* Any sensor data reporting 0 should be ignored, */
+        /* 3 means 'fully calibrated" */
+        bno.getCalibration(&system, &gyro, &accel, &mag);
+
+        /* Display the individual values */
+        Serial.print("Sys:");
+        Serial.print(system, DEC);
+        Serial.print(" G:");
+        Serial.print(gyro, DEC);
+        Serial.print(" A:");
+        Serial.print(accel, DEC);
+        Serial.print(" M:");
+        Serial.println(mag, DEC);
+
+        //delay(BNO055_SAMPLERATE_DELAY_MS);
+        vTaskDelay(BNO055_SAMPLERATE_DELAY_MS / portTICK_PERIOD_MS);
+    }
+    Serial.println("\nFully calibrated!");
+    Serial.println("--------------------------------");
+    Serial.println("Calibration Results: ");
+    adafruit_bno055_offsets_t newCalib;
+    bno.getSensorOffsets(newCalib);
+    instance -> displaySensorOffsets(newCalib);
+    bno.setSensorOffsets(newCalib);
+    vTaskDelete(NULL);
+  }
 
 
 void Core::displaySensorOffsets(const adafruit_bno055_offsets_t &calibData)
@@ -120,6 +121,48 @@ void Core::onIMU(void){
 void Core::offIMU(void){
     sleepIMU();
     Wire.end();
+};
+
+void Core::calibrateIMU(bool task){
+    if(task){calibrateIMU();}
+    else{
+        adafruit_bno055_opmode_t modeback = bno.getMode();
+        wakeIMU();
+        ledRGB.hueToRGB(200);
+        ledRGB.on();
+        sensors_event_t event;
+        uint8_t system, gyro, accel, mag = 0;
+        //SemaphoreHandle_t i2cMutex = instance -> getMutex();
+        while(!(system == 3 && gyro == 3 && mag == 3)){
+            bno.getEvent(&event);
+            /* Get the four calibration values (0..3) */
+            /* Any sensor data reporting 0 should be ignored, */
+            /* 3 means 'fully calibrated" */
+            bno.getCalibration(&system, &gyro, &accel, &mag);
+
+            /* Display the individual values */
+            Serial.print("Sys:");
+            Serial.print(system, DEC);
+            Serial.print(" G:");
+            Serial.print(gyro, DEC);
+            Serial.print(" A:");
+            Serial.print(accel, DEC);
+            Serial.print(" M:");
+            Serial.println(mag, DEC);
+
+            //delay(BNO055_SAMPLERATE_DELAY_MS);
+            vTaskDelay(BNO055_SAMPLERATE_DELAY_MS / portTICK_PERIOD_MS);
+        }
+        Serial.println("\nFully calibrated!");
+        Serial.println("--------------------------------");
+        Serial.println("Calibration Results: ");
+        adafruit_bno055_offsets_t newCalib;
+        bno.getSensorOffsets(newCalib);
+        displaySensorOffsets(newCalib);
+        bno.setSensorOffsets(newCalib);
+        bno.setMode(modeback);
+        ledRGB.blynk(3, 250);
+    }
 };
 
 
