@@ -13,6 +13,10 @@ void Motor::setPower(void){
     setPower(power);
 };
 
+float Motor::getPower(void){
+    return power;
+};
+
 void Motor::setPower(float value){
     float maped_power;
     if(value <= 0){
