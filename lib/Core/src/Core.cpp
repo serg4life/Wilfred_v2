@@ -2,8 +2,8 @@
 
 
 Core::Core() : 
-    motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 0.0),         //Initialization list, when there are objects inside other objects contructors.
-    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 0.0),
+    motor_R(MOTOR_R_PIN_A, MOTOR_R_PIN_B, 50.0),         //Initialization list, when there are objects inside other objects contructors.
+    motor_L(MOTOR_L_PIN_A, MOTOR_L_PIN_B, 50.0),
     bno(55, 0x28),
     ledRGB()
 {
