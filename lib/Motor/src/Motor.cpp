@@ -17,6 +17,10 @@ float Motor::getPower(void){
     return power;
 };
 
+Rotations Motor::getRotation(void){
+    return rotation;
+};
+
 void Motor::setPower(float value){
     float maped_power;
     if(value <= 0){

@@ -8,9 +8,11 @@ class CommandHandler {
         CommandHandler();
         void processCommand(String command);
         void assignCore(Core coreObject_);
+        void enqueueCommand(String command);
         
     private:
         String lastCommand;
+        QueueHandle_t commandQueue;
         Core coreObject;
 };
 
