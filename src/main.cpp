@@ -39,7 +39,7 @@ void webSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t
     }
 
     String command = doc["command"];
-    handler.processCommand(command); // Controlar el tanque según el comando recibido
+    handler.enqueueCommand(command);  //Lo metemos en una cola y es procesado por otra tarea en otro core.
   }
 }
 

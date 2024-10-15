@@ -6,9 +6,9 @@
 class CommandHandler {
     public:
         CommandHandler();
-        void processCommand(String command);
+        void processCommandTask(void *pvParameters);
         void assignCore(Core coreObject_);
-        void enqueueCommand(String command);
+        void enqueueCommand(String& command);
         
     private:
         String lastCommand;
