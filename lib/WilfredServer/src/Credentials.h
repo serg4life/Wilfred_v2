@@ -1,0 +1,7 @@
+#ifndef CREDENTIALS_H
+#define CREDENTIALS_H
+
+#define WIFI_SSID "EUSKALTEL_7DEA"
+#define WIFI_PW "49E1C3C72DD4C969"
+
+#endif
