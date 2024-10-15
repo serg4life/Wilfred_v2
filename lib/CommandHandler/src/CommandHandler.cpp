@@ -3,7 +3,9 @@
 
 extern WebController controller;
 
-CommandHandler::CommandHandler(){};
+CommandHandler::CommandHandler(){
+    commandQueue = xQueueCreate(10, sizeof(String));
+};
 
 
 void CommandHandler::assignCore(Core coreObject_){
