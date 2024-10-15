@@ -13,7 +13,7 @@ void Motor::setPower(void){
     setPower(power);
 };
 
-float Motor::getPower(void){
+u_int32_t Motor::getPower(void){
     return power;
 };
 
@@ -21,22 +21,22 @@ Rotations Motor::getRotation(void){
     return rotation;
 };
 
-void Motor::setPower(float value){
-    float maped_power;
+void Motor::setPower(uint32_t value){
+    uint32_t maped_power;
     if(value <= 0){
         power = 0;
         analogWrite(pinA, 0);
         analogWrite(pinB, 0);
     }
     else {
-        if(value > 100) {value = 100;}
+        if(value > 255) {value = 255;}
         power = value;
-        maped_power = map(value, 0, 100, deathzone, 1024);
+        maped_power = map(value, 0, 255, deathzone, 255);
         writePins(maped_power);
     }
 };
 
-void Motor::writePins(float value){
+void Motor::writePins(uint32_t value){
     switch(rotation) {
         case CLOCKWISE:
             analogWrite(pinA, value);

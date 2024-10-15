@@ -6,17 +6,17 @@ typedef enum {CLOCKWISE, COUNTERCLOCKWISE} Rotations;
 class Motor {
   public:
     Motor(int pinAA, int pinBB, float deathZone);
-    void setPower(float value);
+    void setPower(uint32_t value);
     void setPower(void);
     void setRotation(Rotations nRotation);
     void invertRotation(void);
-    void writePins(float values);
+    void writePins(uint32_t values);
     void brake(void);
-    float getPower(void);
+    uint32_t getPower(void);
     Rotations getRotation(void);
 
   private:
-    float power;
+    uint32_t power;
     Rotations rotation;
     int pinA;
     int pinB;

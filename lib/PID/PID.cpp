@@ -9,7 +9,7 @@ PIDController::PIDController(double Kp_, double Ki_, double Kd_, double a_){
     Kr = sqrt(Ki*Kd);
     checkAngleEnabled = false;
     reference = NAN;
-    saturation = 100;
+    saturation = 255;
     lastInput = 0;
     integral = 0;
     lastError = 0;
