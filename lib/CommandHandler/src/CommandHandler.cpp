@@ -1,10 +1,15 @@
 #include <CommandHandler.h>
+#include <WilfredServer.h>
+
+extern WebController controller;
 
 CommandHandler::CommandHandler(){};
+
 
 void CommandHandler::assignCore(Core coreObject_){
     coreObject = coreObject_;
 };
+
 
 void CommandHandler::processCommand(String command){
     if (command.startsWith("core:")) {
@@ -22,9 +27,9 @@ void CommandHandler::processCommand(String command){
         command = command.substring(7);
         if (command == "enable") {
             coreObject.enableMotors();
-            //webSocket.broadcastTXT("NOTIFY:motors:status:enabled");    //Para notificar a todos los clientes el estado de los motores
+            controller.webSocket.broadcastTXT("NOTIFY:motors:status:enabled");    //Para notificar a todos los clientes el estado de los motores
         } else if (command == "disable") {
-            //webSocket.broadcastTXT("NOTIFY:motors:status:disabled");
+            controller.webSocket.broadcastTXT("NOTIFY:motors:status:disabled");
             coreObject.disableMotors();
         } else if (command == "stop") {
             coreObject.stop();

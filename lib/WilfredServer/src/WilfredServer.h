@@ -19,9 +19,8 @@ class WebController {
         void serviceLoop(void);
         bool loadStatic(void);
         void provideFiles(void);
-
-    private:
         WebSocketsServer webSocket;
+
 };
 
 #endif

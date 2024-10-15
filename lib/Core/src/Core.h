@@ -30,6 +30,8 @@ class Core {
         void disableMotors(void);
         void initIMU(void);
         void wakeIMU(void);
+        void offIMU(void);
+        void onIMU(void);
         void sleepIMU(void);
         void calibrateIMU(void);
         void stop(void);

@@ -111,6 +111,18 @@ void Core::sleepIMU(void){
 };
 
 
+void Core::onIMU(void){
+    Wire.begin();
+    wakeIMU();
+};
+
+
+void Core::offIMU(void){
+    sleepIMU();
+    Wire.end();
+};
+
+
 void Core::calibrateIMU(void){
     adafruit_bno055_opmode_t modeback = bno.getMode();
     wakeIMU();
